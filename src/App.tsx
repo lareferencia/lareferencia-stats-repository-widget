@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { repositoryWs, fetchData } from "./api/api";
-
-const Loading = React.lazy(() => import("./components/loading/Loading"));
-const ErrorView = React.lazy(() => import("./components/ErrorView"));
-const ChartsContainer = React.lazy(
-  () => import("./components/charts/ChartsContainer")
-);
-
-import style from "./styles/app.module.css";
-
-import { Statistics } from "./interfaces/stadistics.interface";
-
-import { useTranslation } from "react-i18next";
-import { getEventLabels, getScopeLabels } from "./utils/scopes-and-events";
 import {
   DEFAULT_EMBED_FUNCTION_NAME,
   DEFAULT_END_DATE,
@@ -21,10 +8,22 @@ import {
   DEFAULT_START_DATE,
   DEFAULT_TIME_UNIT,
 } from "./config";
+
+import { useTranslation } from "react-i18next";
+
 import { Box } from "@chakra-ui/react";
-import LangSelector from "./components/LangSelector";
-import { RepositorySelector } from "./components/RepositorySelector";
+
+const Loading            = React.lazy(() => import("./components/ui/Loading"));
+const ErrorView          = React.lazy(() => import("./components/ui/ErrorView"));
+const TabsContainer    = React.lazy(() => import("./components/tabs/TabsContainer") );
+const LangSelector       = React.lazy(() => import("./components/ui/LangSelector")) 
+const RepositorySelector = React.lazy(() => import("./components/ui/RepositorySelector")) 
+
+import { Statistics } from "./interfaces/stadistics.interface";
+import { getEventLabels, getScopeLabels } from "./utils/scopes-and-events";
 import { Repository } from "./interfaces/repository.interface";
+
+
 
 function App() {
   // Translation React hook
@@ -38,7 +37,6 @@ function App() {
 
   // LRHW widget parameters
   const embbedFunction = DEFAULT_EMBED_FUNCTION_NAME;
-
   const widgetParams = (window as any)[embbedFunction];
 
   const sourceId: string =
@@ -131,11 +129,11 @@ function App() {
         <LangSelector i18n={i18n} t={t} />
       </Box>
       {!error ? (
-        <Box className={style.container}>
+        <Box maxW="1444px" m="auto" fontWeight="400" p="1rem">
           {isLoading || !data ? (
             <Loading />
           ) : (
-            <ChartsContainer
+            <TabsContainer
               data={data}
               t={t}
               scopeLabels={getScopeLabels(widgetParams, t)}

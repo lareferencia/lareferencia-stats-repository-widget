@@ -5,6 +5,7 @@ export const theme = extendTheme({
         global: {
             body: {
                 bg: 'gray.50',
+                fontFamily: 'Poppins, sans-serif',
             },
         },
     },

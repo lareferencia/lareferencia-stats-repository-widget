@@ -6,8 +6,6 @@ export const DEFAULT_BASE_URL = 'https://stats.lareferencia.info/api/usage_stats
 export const DEFAULT_REPOSITORY_WS = '/report/repositoryWidget';
 export const DEFAULT_BY_COUNTRY_WS = '/report/repositoryWidgetByCountry';
 
-
-
 export const DEFAULT_IDENTIFIER = 'oai:sedici.unlp.edu.ar:10915/133341'
 export const DEFAULT_SOURCE_ID = 'opendoar::1329';
 export const DEFAULT_START_DATE = 'now-1y';

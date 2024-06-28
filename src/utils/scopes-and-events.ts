@@ -1,6 +1,6 @@
 import { TFunction } from "i18next";
 import { EventLabels, ScopeLabels } from "../interfaces/stadistics.interface";
-import { DEFAULT_SCOPE_LABELS } from "../config";
+import { DEFAULT_SCOPE_LABELS } from '../config';
 
 export const getScopeLabels = (widgetParams: any, translate:TFunction) => {
 
@@ -9,8 +9,8 @@ export const getScopeLabels = (widgetParams: any, translate:TFunction) => {
     if (widgetParams && widgetParams.parameters.scope_labels) {
       scopeLabels = {
         L: DEFAULT_SCOPE_LABELS.L,
-        N: widgetParams.parameters.scope_labels.N,
-        R: widgetParams.parameters.scope_labels.R,
+        N: widgetParams.parameters.scope_labels.N || `${translate(`${DEFAULT_SCOPE_LABELS.N}`)}`,
+        R: widgetParams.parameters.scope_labels.R ||`${translate(`${DEFAULT_SCOPE_LABELS.R}`)}`,
         ALL: `${translate("total-events")}`
       }
     } else {
