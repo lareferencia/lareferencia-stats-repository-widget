@@ -19,54 +19,55 @@
    ```
     <script>
 
-   		(function (window, document, scriptTag, globalVar, paramsKey, cdnUrl) {
-   		window[globalVar] = window[globalVar] || function () {
-   			window[globalVar][paramsKey] = window[globalVar][paramsKey] || {};
-   			Object.assign(window[globalVar][paramsKey], arguments[0] || {});
-   		};
-
-   		const scriptElement = document.createElement(scriptTag);
-   		scriptElement.id = globalVar;
-   		scriptElement.src = cdnUrl;
-   		scriptElement.type = 'module';
-   		scriptElement.defer = true; // Use defer instead of async if appropriate
-
-   		scriptElement.onerror = function() {
-   			console.error(`Failed to load script ${scriptElement.src}`);
-   		};
-
-   		const firstScript = document.getElementsByTagName(scriptTag)[0];
-   		firstScript.parentNode.insertBefore(scriptElement, firstScript);
-   		})(
-   		window,
-   		document,
-   		"script",
-   		"lrhw",
-   		"parameters",
-   		"https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"
-   		);
-   	   	window['lrhw']({
-   		 widget_div_id: "lrhw-widget",
-   		 repositories_list: [
-   		   {
-   			 label:"[[Nombre del repositorio]]",
-   			 value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
-   		   },
-        {
-   			 label:"[[Nombre del repositorio]]",
-   			 value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
-   		   },
-   		 ],
-
-   		 default_repository: {
-       label:"[[Nombre del repositorio]]",
-       value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
-   		 },
-   		 scope_labels: {
-   		   N: "[[Nombre Nodo Nacional]]",
-   		 },
-   	   });
-   	 </script>
+   (function (window, document, scriptTag, globalVar, paramsKey, cdnUrl) {
+   	window[globalVar] = window[globalVar] || function () {
+   	window[globalVar][paramsKey] = window[globalVar][paramsKey] || {};
+   	Object.assign(window[globalVar][paramsKey], arguments[0] || {});
+   };
+   
+	const scriptElement = document.createElement(scriptTag);
+   	scriptElement.id = globalVar;
+   	scriptElement.src = cdnUrl;
+   	scriptElement.type = 'module';
+   	scriptElement.defer = true; // Use defer instead of async if appropriate
+   
+   	scriptElement.onerror = function() {
+ 	console.error(`Failed to load script ${scriptElement.src}`);
+	};
+   
+   	const firstScript = document.getElementsByTagName(scriptTag)[0];
+	firstScript.parentNode.insertBefore(scriptElement, firstScript);
+  	})(
+   	window,
+   	document,
+	"script",
+   	"lrhw",
+	"parameters",
+  	"https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"
+   	);
+   	window['lrhw']({
+    		widget_div_id: "lrhw-widget",
+   		repositories_list: [
+   			{
+   			label:"[[Nombre del repositorio]]",
+   			value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
+   			},
+   			{
+   			label:"[[Nombre del repositorio]]",
+   			value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
+   			},
+   		],
+    		default_repository:
+   			{
+   			label:"[[Nombre del repositorio]]",
+ 			value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
+			},
+   		scope_labels:
+   		{
+    			N: "[[Nombre Nodo Nacional]]",
+   		},
+   		});
+   </script>
    ```
 
    3. Dicho script consta de dos partes, la primera es una función para cargar los archivos .js de cdn.jsdeliver ("https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"), el numero que sigue luego de la @ es la versión del widget, debe ser modificado cuando hayan actualizaciones disponibles.
