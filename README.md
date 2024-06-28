@@ -6,13 +6,14 @@
 
 1. Ubicar el lugar del HTML donde se desee incrustrar el widget.
 2. Colocar una etiqueta, por ejemplo <div> con el id "lrhw-widget" (dentro de esa etiqueta se renderizará el widget), quedará de esta forma:
+   
    ```
    <div id="lrhw-widget"></div>
    ```
 
 ### 2. Script que utiliza los archivos Javascript
 
-1. Ubicar la etiqueta <body></body>, posiblemente dentro de "index.html"
+1. Ubicar la etiqueta <body>, posiblemente dentro de "index.html"
 2. Copiar y pega dentro de dicha etiqueta el siguiente <script></script>
 
    ```
