@@ -68,6 +68,7 @@
    		},
    		});
    </script>
+   
    ```
 
    3. Dicho script consta de dos partes, la primera es una función para cargar los archivos .js de cdn.jsdeliver ("https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"), el numero que sigue luego de la @ es la versión del widget, debe ser modificado cuando hayan actualizaciones disponibles.
@@ -78,18 +79,21 @@
 
    1. repositories_list, es arreglo de objetos, cada objeto tiene un label, y un value.
       Reemplazar el valor de label quitando los [[]] con el nombre del repositorio, luego reemplazar el valor de value quitando los [[]] por el id del repositorio, por ejemplo
-      `    {
+      
+   	```
+       	{
 	    label:"[[Nombre del repositorio]]",
 		value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
 	}
 	
-	<!--Por ejemplo, Reemplazar por:-->
+	Por ejemplo, Reemplazar por:
 	
 	{
 	    label:"Repositorio Institucional de la Universidad Carlos III de Madrid",
 		value: "opendoar::912",
-	},
-   `
+	
+ 	},
+	```
       El widget posee un selector para cambiar de repositorios en tiempo real y ver las estadistcas, dichos repositorios estan tomados de ese arreglo, por lo tanto agregar tantos objetos {} como se quiera.
 
 3. default_repository, colocar aqui el repositorio por default, es decir el repositorio que primero se va a mostrar al entrar en el widget. Por otro lado, si no se colocan repositorios en repositories_list, solo se mostrara el que este por default, es decir el que este en default_repository. Por lo tanto este parametro no debe estar nunca vacio.
