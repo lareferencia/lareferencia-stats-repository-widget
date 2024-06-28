@@ -77,8 +77,8 @@
 
    ### 4. Configuracion de los repositorios a exibir.
 
-   1. repositories_list, es arreglo de objetos, cada objeto tiene un label, y un value.
-      Reemplazar el valor de label quitando los [[]] con el nombre del repositorio, luego reemplazar el valor de value quitando los [[]] por el id del repositorio, por ejemplo
+1. repositories_list, es arreglo de objetos, cada objeto tiene un label, y un value.
+      Reemplazar el valor de label quitando los [[]] con el nombre del repositorio, luego reemplazar el valor de value quitando los [[]] por el id del repositorio, por ejemplo:
       
    	```
        	{
