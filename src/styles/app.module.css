@@ -1,0 +1,67 @@
+
+
+.preview_img {
+    cursor: pointer;
+  }
+
+.error_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif; 
+    line-height: 1.5;
+    font-weight: 400;
+    color: #1a1a1a;
+  }
+
+.container {
+    height: 100%;
+    max-width: 1444px;
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif; 
+    line-height: 1.5;
+    font-weight: 400;
+    border-radius: 10px;
+    color: #1a1a1a;
+    padding: 1rem;
+  }
+
+  .loadingContainer {
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .timeUnitButton {
+    padding: 0.3em 0.8em;
+    border: 1px solid rgba(128, 128, 128, 0.393);
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    opacity: 0.5;
+    margin-right: 6px;
+  }
+
+  .timeUnitButton:hover {
+    background-color: grey;
+    color: white;
+    transition: 0.3s ease-in-out;
+  }
+
+  .buttonActive {
+    opacity: 1;
+    background-color: grey;
+    color: white;
+  }
+
+
+  
+  

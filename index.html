@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usage stats widget</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="lrhw-widget"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <script>
+      (function (w, d, s, o, p, f, js, fjs) {
+        w[o] =
+          w[o] ||
+          function () {
+            w[o][p] = w[o][p] || {};
+            Object.assign(w[o][p], arguments[0] || {});
+          };
+        (js = d.createElement(s)), (fjs = d.getElementsByTagName(s)[0]);
+        js.id = o;
+        js.src = f;
+        js.async = 1;
+        fjs.parentNode.insertBefore(js, fjs);
+      })(
+        window,
+        document,
+        "script",
+        "lrhw",
+        "parameters",
+        "https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"
+      );
+      lrhw({
+        widget_div_id: "lrhw-widget",
+
+        repositories_list: [
+          {
+            label:
+              "Repositorio Institucional de la Universidad Carlos III de Madrid",
+            value: "opendoar::912",
+          },
+          {
+            label:
+              "Repositorio insitucional del insituto Madrileño de Estudios Avanzados en Nanociencia",
+            value: "opendoar::10070",
+          },
+          {
+            label:
+              "Biblioteca Virtual del Sistema Sanitario Publico de Andalucia (BV-SSPA)",
+            value: "opendoar::2582",
+          },
+          {
+            label: "Repositorio dummy SIN ESTADISTICAS",
+            value: "opendoar::2636",
+          },
+          {
+            label: "Repositorio dummy que NO EXISTE",
+            value: "SITEID::1",
+          },
+        ],
+
+        default_repository: {
+          label:
+            "Repositorio Institucional de la Universidad Carlos III de Madrid",
+          value: "opendoar::912",
+        },
+        event_labels: {
+          views: "[[Vistas]]",
+          downloads: "[[Descargas]]",
+          outlinks: "[[Enlaces]]",
+          conversions: "Conversiones",
+        },
+        scope_labels: {
+          L: "LA Referencia",
+          N: "[[Nombre Nodo Nacional]]",
+          R: "[[Nombre Repositorio]]",
+        },
+        country: "[[ISO-país]]",
+        national_source: "[[SITEID::XXX]]",
+      });
+    </script>
+  </body>
+</html>

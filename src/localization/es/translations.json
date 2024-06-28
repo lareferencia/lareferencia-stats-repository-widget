@@ -1,0 +1,58 @@
+{
+    "translation": {
+        "es": "Español",
+        "en": "Inglés",
+        "pt": "Portugués",
+        "general": "General",
+        "byCountry": "Por país",
+        "help": "Ayuda",
+        "year": "año",
+        "years": "años",
+        "months": "Meses",
+        "country": "País",
+        "total-events": "Eventos totales",
+        "repository": "Repositorio",
+        "national": "Nodo Nacional",
+        "views": "Vistas",
+        "download": "Descargar",
+        "downloads": "Descargas",
+        "outlinks": "Enlaces",
+        "conversions": "Conversiones",
+        "calendar-lang": "es",
+        "week-days": "dom, lun, mar, mie, jue, vie, Sáb",
+        "month-names": "Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic",
+        "csv-button": "Descargar CSV",
+        "pie-chart-title": "Eventos totales del país",
+        "tooltip-others-countries": "Eventos totales de otros países fuera del top 10",
+
+        "no-data": "Repositorio inexistente en la base de datos",
+        "no-statistics": "Aún no hay estadísticas para este repositorio",
+
+        "tooltip-by-country-panel": "País de origen de los eventos",
+        "tooltip-general-panel": "Suma de vistas, descargas y enlaces",
+
+        "southamerica": "Sudamérica",
+        "northamerica": "Norteamérica",
+        "europe": "Europa",
+        "africa": "África",
+        "asia": "Asia",
+        "oceania": "Oceanía",
+        "total-events-by-country": "Eventos totales por país",
+        "total-events-of-the-country": "Eventos totales del país",
+
+        "january": "Enero",
+        "february": "Febrero",
+        "march": "Marzo",
+        "april": "Abril",
+        "may": "Mayo",
+        "june": "Junio",
+        "july": "Julio",
+        "august": "Agosto",
+        "september": "Septiembre",
+        "october": "Octubre",
+        "november": "Noviembre",
+        "december": "Diciembre"
+
+
+    }
+}

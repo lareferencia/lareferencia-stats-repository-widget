@@ -1,0 +1,57 @@
+{
+    "translation": {
+        "es": "Spanish",
+        "en": "English",
+        "pt": "Portuguese",
+        "general": "General",
+        "byCountry": "By country",
+        "help": "Help",
+        "year": "year",
+        "years": "years",
+        "months": "months",
+        "country": "Country",
+        "total-events": "Total events",
+        "national": "National Node",
+        "repository": "Repository",
+        "views": "Views",
+        "download": "Download",
+        "downloads": "Downloads",
+        "outlinks": "Outlinks",
+        "conversions": "Conversions",
+        "calendar-lang": "en",
+        "week-days": "Sun, Mon, Tue, Wed, Thu, Fri, Sat",
+        "month-names": "Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec",
+        "csv-button": "Download CSV",
+        "pie-chart-title": "Total events of the country",
+
+        "no-data": "No data available",
+        "no-statistics": "No statistics available",
+
+        "tooltip-by-country-panel": "Country of origin of the events",
+        "tooltip-general-panel": "Sum of views, downloads and links",
+                
+        "southamerica": "Southamerica",
+        "northamerica": "Northamerica",
+        "europe": "Europe",
+        "africa": "Africa",
+        "asia": "Asia",
+        "oceania": "Oceania",
+        "total-events-by-country": "Total events by country",
+        "total-events-of-the-country": "Total events of the country",
+
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+        
+        
+    }
+}
