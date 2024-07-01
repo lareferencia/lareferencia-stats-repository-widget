@@ -14,7 +14,7 @@
 ### 2. Script que utiliza los archivos Javascript
 
 1. Ubicar la etiqueta <body>, posiblemente dentro de "index.html"
-2. Copiar y pega dentro de dicha etiqueta el siguiente <script></script>
+2. Copiar y pega dentro de dicha etiqueta el siguiente script
 
    ```
     <script>
@@ -94,7 +94,7 @@
  	},
 	```
     
-      El widget posee un selector para cambiar de repositorios en tiempo real y ver las estadistcas, dichos repositorios estan tomados de ese arreglo, por lo tanto agregar tantos objetos {} como se quiera.
+      El widget posee un selector para cambiar de repositorios en tiempo real y ver las estadistcas, dichos repositorios estan tomados de ese arreglo, por lo tanto agregar tantos objetos {} como repositorios se quiera mostrar.
 
-2. default_repository, colocar aqui el repositorio por default, es decir el repositorio que primero se va a mostrar al entrar en el widget. Por otro lado, si no se colocan repositorios en repositories_list, solo se mostrara el que este por default, es decir el que este en default_repository. Por lo tanto este parametro no debe estar nunca vacio.
-   Aclaracion: El repositorio colocado aqui, puede estar tambien incluido dentro de la lista de repositories_list, recomendable.
+2. default_repository, colocar aqui el repositorio por default, es decir el repositorio que primero se va a mostrar al entrar en el widget. Por otro lado, si no se colocaran repositorios en repositories_list, solo se mostrara el repositorio por default, es decir el que se colocó en default_repository. Por lo tanto este parametro no debe estar nunca vacio.
+   Aclaracion: El repositorio colocado por default, debe estar incluido tambien en la lista de repositorios en repositories_list.
