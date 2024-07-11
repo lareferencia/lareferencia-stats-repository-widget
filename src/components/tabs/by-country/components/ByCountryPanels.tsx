@@ -7,12 +7,17 @@ import { LiaFileDownloadSolid } from "react-icons/lia";
 import { GiClick } from "react-icons/gi";
 import { IoFunnel } from "react-icons/io5";
 import { MdNumbers } from "react-icons/md";
-import { CountryObject } from "../../../../interfaces/byCountry.interface";
 import { EventLabels } from "../../../../interfaces/stadistics.interface";
 import { TFunction } from "i18next";
+import { ProcessedData } from "../../../../interfaces";
+
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+
+countries.registerLocale(enLocale);
 
 type Props = {
-  country: CountryObject;
+  country: ProcessedData;
   eventLabels: EventLabels;
   t: TFunction;
 };
@@ -25,6 +30,7 @@ const iconMap = {
 };
 
 export const ByCountryPanels = ({ country, eventLabels, t }: Props) => {
+  
   return (
     <Box>
       <Grid

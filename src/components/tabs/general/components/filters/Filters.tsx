@@ -1,5 +1,4 @@
 import { Box } from "@chakra-ui/react";
-import { DatesPicker } from "./DatesPicker";
 import { DateButtons } from "./DateButtons";
 import { LevelSelector } from "./LevelSelector";
 import {
@@ -11,21 +10,9 @@ interface FiltersProps {
   activeScope: string;
   setActiveScope: (scope: string) => void;
   t: any;
-  startDate: Date;
-  setStartDate: (date: Date) => void;
-  endDate: Date;
-  setEndDate: (date: Date) => void;
-  refresh: boolean;
-  setRefresh: (refresh: boolean) => void;
 }
 
 export const Filters = ({
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  refresh,
-  setRefresh,
   t,
   scopeLabels,
   activeScope,
@@ -40,7 +27,7 @@ export const Filters = ({
             activeScope={activeScope}
             setActiveScope={setActiveScope}
           />
-          <DatesPicker
+          {/* <DatesPicker
             startDate={startDate}
             setStartDate={setStartDate}
             endDate={endDate}
@@ -48,7 +35,7 @@ export const Filters = ({
             refresh={refresh}
             setRefresh={setRefresh}
             t={t}
-          />
+          /> */}
         </Box>
         {/* Buttons 1y, 3y, 5y TODO: Work on this */}
         <DateButtons t={t} />

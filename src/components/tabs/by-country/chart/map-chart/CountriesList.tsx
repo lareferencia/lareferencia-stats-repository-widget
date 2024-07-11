@@ -1,17 +1,14 @@
 import { Badge, Box, Divider, Text } from "@chakra-ui/react";
-import countries from "i18n-iso-countries";
-import enLocale from "i18n-iso-countries/langs/en.json";
-import { ByCountryStats } from "../../../../../interfaces/byCountry.interface";
+
 import { useEffect, useState } from "react";
 import { getCountriesByRegionSelected } from "./utils/getCountriesByRegionSelected";
 import Loading from "../../../../ui/Loading";
 import { TFunction } from "i18next";
-
-countries.registerLocale(enLocale);
+import { ProcessedData } from "../../../../../interfaces";
 
 type Props = {
   regionSelected: string;
-  data: ByCountryStats;
+  processedData: ProcessedData[];
   t: TFunction;
 };
 
@@ -20,17 +17,16 @@ type CountryList = {
   value: number;
 };
 
-export const CountriesList = ({ regionSelected, data, t }: Props) => {
+export const CountriesList = ({ regionSelected, processedData, t }: Props) => {
   const [countriesToShow, setCountriesToShow] = useState<CountryList[]>();
 
   useEffect(() => {
     const countryiesToShow = getCountriesByRegionSelected(
       regionSelected,
-      data
+      processedData
     ).map((country) => ({
-      name: countries.getName(country.key, "en") || country.key,
-      value:
-        country.downloads.value + country.views.value + country.outlinks.value,
+      name: country.name,
+      value: country.downloads + country.views + country.outlinks,
     }));
 
     setCountriesToShow(countryiesToShow);
@@ -49,7 +45,13 @@ export const CountriesList = ({ regionSelected, data, t }: Props) => {
             <Divider my="2" />
 
             {countriesToShow.map((country) => (
-              <Box key={country.name} fontWeight="500" fontSize="lg" as="li" listStyleType="none">
+              <Box
+                key={country.name}
+                fontWeight="500"
+                fontSize="lg"
+                as="li"
+                listStyleType="none"
+              >
                 <Badge
                   colorScheme="gray"
                   fontSize="1rem"

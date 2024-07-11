@@ -24,6 +24,9 @@
         "csv-button": "Baixar CSV",
         "pie-chart-title": "Total de eventos do país",
 
+        "events": "Eventos",
+        "other-countries": "Outros países",
+
         "no-data": "Sem dados disponíveis",
         "no-statistics": "Sem estatísticas disponíveis",
         

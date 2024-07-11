@@ -1,35 +1,31 @@
 export interface ByCountryStats {
     country:     Country;
-    conversions: Event;
-    downloads:   Event;
-    outlinks:    Event;
-    views:       Event;
+    conversions: Count;
+    downloads:   Count;
+    outlinks:    Count;
+    views:       Count;
 }
 
-export interface Event {
+export interface Count {
     value: number;
 }
 
 export interface Country {
-    doc_count_error_upper_bound: number;
-    sum_other_doc_count:         number;
-    buckets:                     Bucket[];
+    doc_count:   number;
+    conversions: CountryEvent;
+    downloads:   CountryEvent;
+    outlinks:    CountryEvent;
+    views:       CountryEvent;
 }
 
-export interface Bucket {
-    key:         string;
-    doc_count:   number;
-    conversions: Event;
-    downloads:   Event;
-    outlinks:    Event;
-    views:       Event;
+export interface CountryEvent {
+    doc_count_error_upper_bound: number;
+    sum_other_doc_count:         number;
+    buckets:                     Country[];
 }
-export interface CountryObject {
-    name: string;
-    value: number;
-    views: number;
-    downloads: number;
-    outlinks: number;
-    conversions: number;
-  };
-  
+
+export interface Country {
+    key:       string;
+    doc_count: number;
+    count:     Count;
+}

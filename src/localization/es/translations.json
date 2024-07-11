@@ -25,6 +25,9 @@
         "pie-chart-title": "Eventos totales del país",
         "tooltip-others-countries": "Eventos totales de otros países fuera del top 10",
 
+        "events": "Eventos",
+        "other-countries": "Otros países",
+
         "no-data": "Repositorio inexistente en la base de datos",
         "no-statistics": "Aún no hay estadísticas para este repositorio",
 

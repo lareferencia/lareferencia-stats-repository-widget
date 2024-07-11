@@ -9,7 +9,7 @@ require("esbuild")
   .build({
     logLevel: "info",
     format:'esm',
-    outdir: "dist/chunks",
+    outdir: "dist/assets/chunks",
     entryPoints: ["src/main.tsx"],
     inject: ["scripts/react-shim.js"],
     treeShaking: true,
@@ -17,8 +17,8 @@ require("esbuild")
     plugins: [
       cssModulesPlugin(),
       copyStaticFiles({
-        src: 'src/assets', // Directorio fuente de los archivos estáticos
-        dest: 'dist/assets', // Directorio destino para los archivos estáticos
+        src: 'public', // Directorio fuente de los archivos estáticos
+        dest: 'dist', // Directorio destino para los archivos estáticos
         dereference: true, // Follow symbolic links (optional)
       }),
     ],

@@ -6,6 +6,7 @@ import { RegionsSelector } from "../../components/RegionsSelector";
 import { CountriesList } from "./CountriesList";
 import { getRegionsByCountry } from "./utils/regionMapping";
 import { useState } from "react";
+import { processRawData } from "../../../../../utils/process-raw-data";
 
 type Props = {
   data: ByCountryStats;
@@ -13,8 +14,11 @@ type Props = {
 };
 
 export const MapSectionContainer = ({ data, t }: Props) => {
-  const regions = getRegionsByCountry(data.country.buckets);
+  const processedData = processRawData(data);
+  const regions = getRegionsByCountry(processedData);
+  
   const [regionSelected, setRegionSelected] = useState(regions[0].name);
+
 
   return (
     <Grid templateColumns="repeat(7, 1fr)">
@@ -26,12 +30,12 @@ export const MapSectionContainer = ({ data, t }: Props) => {
           setRegionSelected={setRegionSelected}
         />
 
-        <CountriesList t={t} data={data} regionSelected={regionSelected} />
+        <CountriesList t={t} processedData={processedData} regionSelected={regionSelected} />
       </GridItem>
 
       <MapChart
         regionSelected={regionSelected}
-        buckets={data.country.buckets}
+        processedData={processedData}
         t={t}
       />
     </Grid>

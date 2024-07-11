@@ -14,72 +14,80 @@
   <body>
     <div id="lrhw-widget"></div>
     <script type="module" src="/src/main.tsx"></script>
-
     <script>
+      (function (window, document, scriptTag, globalVar, paramsKey, cdnUrl) {
 
-			(function (window, document, scriptTag, globalVar, paramsKey, cdnUrl) {
-			window[globalVar] = window[globalVar] || function () {
-				window[globalVar][paramsKey] = window[globalVar][paramsKey] || {};
-				Object.assign(window[globalVar][paramsKey], arguments[0] || {});
-			};
+        // Inizilization of the global variable if it doesn't exist
+        window[globalVar] =
+          window[globalVar] ||
+          function () {
+            window[globalVar][paramsKey] = window[globalVar][paramsKey] || {};
+            Object.assign(window[globalVar][paramsKey], arguments[0] || {});
+          };
 
-			const scriptElement = document.createElement(scriptTag);
-			scriptElement.id = globalVar;
-			scriptElement.src = cdnUrl;
-			scriptElement.type = 'module';
-			scriptElement.defer = true; 
+        // Creating the script element
+        const scriptElement = document.createElement(scriptTag);
+        scriptElement.id = globalVar;
+        scriptElement.src = cdnUrl;
+        scriptElement.type = "module";
+        scriptElement.defer = true;
 
-			scriptElement.onerror = function() {
-				console.error(`Failed to load script ${scriptElement.src}`);
-			};
+        // Error handling for the script
+        scriptElement.onerror = function () {
+          console.error(`Failed to load script ${scriptElement.src}`);
+        };
 
-			const firstScript = document.getElementsByTagName(scriptTag)[0];
-			firstScript.parentNode.insertBefore(scriptElement, firstScript);
-			})(
-			window,
-			document,
-			"script",
-			"lrhw",
-			"parameters",
-			"https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"
-			);
-		   	window['lrhw']({
-			 widget_div_id: "lrhw-widget",
-			 repositories_list: [
-			   {
-				 label:
-				   "Repositorio Institucional de la Universidad Carlos III de Madrid",
-				 value: "opendoar::912",
-			   },
-			   {
-				 label:
-				   "Repositorio insitucional del insituto Madrileño de Estudios Avanzados en Nanociencia",
-				 value: "opendoar::10070",
-			   },
-			   {
-				 label:
-				   "Biblioteca Virtual del Sistema Sanitario Publico de Andalucia (BV-SSPA)",
-				 value: "opendoar::2582",
-			   },
-			   {
-				 label: "Repositorio dummy SIN ESTADISTICAS",
-				 value: "opendoar::2636",
-			   },
-			   {
-				 label: "Repositorio dummy que NO EXISTE",
-				 value: "SITEID::1",
-			   },
-			 ],
-	 
-			 default_repository: {
-			   label:
-				 "Repositorio Institucional de la Universidad Carlos III de Madrid",
-			   value: "opendoar::912",
-			 },
-			 scope_labels: {
-			   N: "[[Nombre Nodo Nacional]]",
-			 },
-		   });
-		 </script>
+        // Insert the script element before the first script tag
+        const firstScript = document.getElementsByTagName(scriptTag)[0];
+        firstScript.parentNode.insertBefore(scriptElement, firstScript);
+      })(
+        window,
+        document,
+        "script",
+        "lrhw",
+        "parameters",
+        "https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"
+      );
+	  
+	  // Configuration for the widget
+      window["lrhw"]({
+        widget_div_id: "lrhw-widget",
+        repositories_list: [
+          {
+            label:
+              "Repositorio Institucional de la Universidad Carlos III de Madrid",
+            value: "opendoar::1329",
+          },
+          {
+            label:
+              "Repositorio insitucional del insituto Madrileño de Estudios Avanzados en Nanociencia",
+            value: "opendoar::10070",
+          },
+          {
+            label:
+              "Biblioteca Virtual del Sistema Sanitario Publico de Andalucia (BV-SSPA)",
+            value: "opendoar::2582",
+          },
+          {
+            label: "Repositorio dummy SIN ESTADISTICAS",
+            value: "opendoar::2636",
+          },
+          {
+            label: "Repositorio dummy que NO EXISTE",
+            value: "SITEID::1",
+          },
+        ],
+
+        default_repository: {
+          label:
+            "Repositorio Institucional de la Universidad Carlos III de Madrid",
+          value: "opendoar::912",
+        },
+
+        scope_labels: {
+          N: "[[Nombre Nodo Nacional]]",
+        },
+      });
+    </script>
   </body>
 </html>

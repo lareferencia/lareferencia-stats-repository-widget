@@ -9,7 +9,6 @@ export const byCountryWs = DEFAULT_BY_COUNTRY_WS;
 
 export const fetchData = async (
     ws: string,
-    identifier: string,
     source_id: string,
     start_date: Date | string,
     end_date: Date | string,
@@ -18,7 +17,6 @@ export const fetchData = async (
 
     try {
         const params = {
-            identifier,
             source_id,
             start_date,
             end_date,

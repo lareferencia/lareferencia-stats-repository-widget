@@ -22,13 +22,9 @@ type TabsContainerProps = {
   scopeLabels: ScopeLabels;
   eventLabels: EventLabels;
   t: TFunction;
-  startDate: Date;
-  setStartDate: (date: Date) => void;
-  endDate: Date;
-  setEndDate: (date: Date) => void;
-  setRefresh: (refresh: boolean) => void;
-  refresh: boolean;
   selectedRepository: Repository;
+  startDate: Date;
+  endDate: Date ;
 };
 
 const TabsContainer = ({
@@ -36,13 +32,9 @@ const TabsContainer = ({
   scopeLabels,
   eventLabels,
   t,
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  refresh,
-  setRefresh,
   selectedRepository,
+  startDate,
+  endDate
 }: TabsContainerProps) => {
   // State to manage the active scope level, Default value is 'ALL'
   const [activeScope, setActiveScope] = useState("ALL");
@@ -55,7 +47,7 @@ const TabsContainer = ({
     }
     setTabIndex(index);
   };
-
+  
   return (
     <>
       {/* General and by country TABS */}
@@ -93,12 +85,6 @@ const TabsContainer = ({
               activeScope={activeScope}
               setActiveScope={setActiveScope}
               t={t}
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-              refresh={refresh}
-              setRefresh={setRefresh}
               tabIndex={tabIndex}
             />
           </TabPanel>
@@ -108,6 +94,8 @@ const TabsContainer = ({
             {isByCountryLoaded ? (
               <Suspense fallback={<Loading />}>
                 <ByCountryTab
+                startDate={startDate}
+                endDate={endDate}
                   tabIndex={tabIndex}
                   eventLabels={eventLabels}
                   t={t}

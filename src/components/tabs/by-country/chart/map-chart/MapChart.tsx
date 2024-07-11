@@ -1,31 +1,27 @@
 import { TFunction } from "i18next";
 import * as echarts from "echarts";
-import countries from "i18n-iso-countries";
-import enLocale from "i18n-iso-countries/langs/en.json";
 
-import { Bucket } from "../../../../../interfaces/byCountry.interface";
 import { Box, GridItem } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import { GeoJson } from "../../../../../interfaces/geo-json.interface";
 import { regionLayout } from "./utils/regionMapPosition";
-
-countries.registerLocale(enLocale);
+import { ProcessedData } from "../../../../../interfaces";
 
 type Props = {
-  buckets: Bucket[];
+  processedData: ProcessedData[];
   t: TFunction;
   regionSelected: string;
 };
 
-export const MapChart = ({ buckets, regionSelected, t }: Props) => {
+export const MapChart = ({ processedData, regionSelected, t }: Props) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
   const fetchGeoJson = async (regionSelected: string) => {
     try {
-      const response = await fetch(`/${regionSelected}.json`);
-      
+      const response = await fetch(`/assets/${regionSelected}.json`);
+
       const geojson = await response.json();
-      
+
       return geojson;
     } catch (error) {
       console.error(error);
@@ -40,18 +36,14 @@ export const MapChart = ({ buckets, regionSelected, t }: Props) => {
 
       fetchGeoJson(regionSelected)
         .then((geojson: GeoJson) => {
-          const showCountries = buckets.map((country) => {
-            let countryName =
-              countries.getName(country.key, "en") || country.key;
+          const showCountries = processedData.map((country) => {
+            let countryName = country.name
             if (countryName.toLowerCase() === "people's republic of china") {
               countryName = "China";
             }
             return {
               name: countryName,
-              value:
-                country.downloads.value +
-                country.views.value +
-                country.outlinks.value,
+              value: country.downloads + country.views + country.outlinks,
             };
           });
 

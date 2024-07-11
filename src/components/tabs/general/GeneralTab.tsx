@@ -11,12 +11,6 @@ interface GeneralTabProps {
   activeScope: string;
   setActiveScope: (scope: string) => void;
   t: any;
-  startDate: Date;
-  setStartDate: (date: Date) => void;
-  endDate: Date;
-  setEndDate: (date: Date) => void;
-  refresh: boolean;
-  setRefresh: (refresh: boolean) => void;
   tabIndex: number;
 }
 
@@ -27,12 +21,6 @@ const GeneralTab = ({
   activeScope,
   setActiveScope,
   t,
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  refresh,
-  setRefresh,
   tabIndex,
 }: GeneralTabProps) => {
   return (
@@ -46,12 +34,6 @@ const GeneralTab = ({
       />
       {/* Filters */}
       <Filters
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-        refresh={refresh}
-        setRefresh={setRefresh}
         t={t}
         scopeLabels={scopeLabels}
         activeScope={activeScope}

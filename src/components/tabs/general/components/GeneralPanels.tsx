@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Box, Card, Grid } from "@chakra-ui/react";
+import { Box, Card, Grid, Text } from "@chakra-ui/react";
 import { Tooltip } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 
@@ -84,7 +84,7 @@ export const GeneralPanels = ({
   ];
 
   return (
-    <div>
+    <Box>
       {scopeData.map((bucket: LevelBucket, index) => (
         <Grid
           key={index}
@@ -104,29 +104,25 @@ export const GeneralPanels = ({
             >
               <Grid>
                 <Box display="flex" gap="2">
-                  <span
-                    style={{
-                      fontWeight: "600",
-                      color: "gray",
-                      fontSize: "1.1rem",
-                    }}
+                  <Text
+                    as="span"
+                    fontWeight="600"
+                    color="gray"
+                    fontSize="1.1rem"
                   >
                     Total
-                  </span>
-                  <Tooltip
-                    label={t("tooltip-general-panel")}
-                    fontSize="md"
-                  >
+                  </Text>
+                  <Tooltip label={t("tooltip-general-panel")} fontSize="md">
                     <InfoIcon fontSize="12px" color="teal" />
                   </Tooltip>
                 </Box>
-                <span style={{ fontWeight: "700", fontSize: "1.5rem" }}>
+                <Text as="span" fontWeight="700" fontSize="1.3rem">
                   {(
                     bucket.downloads.value +
                     bucket.views.value +
                     bucket.outlinks.value
                   ).toLocaleString()}
-                </span>
+                </Text>
               </Grid>
               <Card
                 p="4"
@@ -149,18 +145,17 @@ export const GeneralPanels = ({
                 alignItems="center"
               >
                 <Grid>
-                  <span
-                    style={{
-                      fontWeight: "600",
-                      color: "gray",
-                      fontSize: "1.1rem",
-                    }}
+                  <Text
+                    as="span"
+                    fontWeight="600"
+                    color="gray"
+                    fontSize="1.1rem"
                   >
                     {panel.label}
-                  </span>
-                  <span style={{ fontWeight: "700", fontSize: "1.5rem" }}>
+                  </Text>
+                  <Text as="span" fontWeight="700" fontSize="1.3rem">
                     {bucket[panel.title as PanelTitle].value.toLocaleString()}
-                  </span>
+                  </Text>
                 </Grid>
                 <Card
                   p="4"
@@ -176,6 +171,6 @@ export const GeneralPanels = ({
           ))}
         </Grid>
       ))}
-    </div>
+    </Box>
   );
 };

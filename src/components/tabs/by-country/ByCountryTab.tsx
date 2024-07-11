@@ -1,25 +1,29 @@
 import { useEffect, useState } from "react";
 
-
 import { Box, Card } from "@chakra-ui/react";
 
 import { TFunction } from "i18next";
 import { EventLabels } from "../../../interfaces/stadistics.interface";
-import { ByCountryStats, CountryObject, Repository } from "../../../interfaces";
+import { ByCountryStats, Repository } from "../../../interfaces";
 import { byCountryWs, fetchData } from "../../../api/api";
-import { DEFAULT_END_DATE, DEFAULT_IDENTIFIER, DEFAULT_START_DATE, DEFAULT_TIME_UNIT } from "../../../config";
+import {
+  DEFAULT_END_DATE,
+  DEFAULT_START_DATE,
+  DEFAULT_TIME_UNIT,
+} from "../../../config";
 import Loading from "../../ui/Loading";
 import ErrorView from "../../ui/ErrorView";
 import { ByCountryPanels, ByCountryTable } from "./components";
 import { PieChart } from "./chart/PieChart";
 import { MapSectionContainer } from "./chart/map-chart";
 
-
 type ByCountryTabProps = {
   tabIndex: number;
   eventLabels: EventLabels;
   t: TFunction;
   selectedRepository: Repository;
+  startDate: Date;
+  endDate: Date;
 };
 
 const ByCountryTab = ({
@@ -27,30 +31,28 @@ const ByCountryTab = ({
   eventLabels,
   t,
   selectedRepository,
+  startDate,
+  endDate,
 }: ByCountryTabProps) => {
   const [data, setData] = useState<ByCountryStats>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [country, setCountry] = useState<CountryObject>();
-
+  const [country, setCountry] = useState();
 
   const fetchDataAsync = async () => {
-
-    
     setIsLoading(true);
     try {
       const resp: ByCountryStats = await fetchData(
         byCountryWs,
-        DEFAULT_IDENTIFIER,
         selectedRepository.value,
-        DEFAULT_START_DATE,
-        DEFAULT_END_DATE,
+        startDate || DEFAULT_START_DATE,
+        endDate || DEFAULT_END_DATE,
         DEFAULT_TIME_UNIT
       );
 
-      if (resp.country.buckets.length > 0) {
+      if (resp.country) {
+        //TODO: arreglar esta condicion
         setData(resp);
-        
       } else {
         setError(true);
       }
@@ -69,7 +71,7 @@ const ByCountryTab = ({
     <Box>
       {isLoading && <Loading />}
 
-      {error && <ErrorView errorMessage={'Mensaje de error'} />}
+      {error && <ErrorView errorMessage={"Mensaje de error"} />}
 
       {data && (
         <Box>
@@ -97,6 +99,5 @@ const ByCountryTab = ({
     </Box>
   );
 };
-  
 
 export default ByCountryTab;

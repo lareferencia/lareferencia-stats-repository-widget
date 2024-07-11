@@ -12,40 +12,40 @@ import {
 } from "@chakra-ui/react";
 import { ByCountryStats } from "../../../../interfaces/byCountry.interface";
 import { EventLabels } from "../../../../interfaces/stadistics.interface";
-import countries from "i18n-iso-countries";
-import enLocale from "i18n-iso-countries/langs/en.json";
-import { TFunction } from "i18next";
 
-countries.registerLocale(enLocale);
+import { TFunction } from "i18next";
+import { processRawData } from "../../../../utils/process-raw-data";
+import { DEFAULT_EVENTS_LABELS } from "../../../../config";
 
 type ByCountryTableProps = {
   data: ByCountryStats;
   eventLabels: EventLabels;
   t: TFunction;
 };
-export const ByCountryTable = ({ data, eventLabels, t }: ByCountryTableProps) => {
-
+export const ByCountryTable = ({
+  data,
+  eventLabels,
+  t,
+}: ByCountryTableProps) => {
   return (
     <Card padding="4" shadow="sm" borderRadius="12" mt={6}>
       <TableContainer>
         <Table variant="striped" colorScheme="gray" size="lg">
           <Thead>
             <Tr>
-              <Th>{t('country')}</Th>
+              <Th>{t("country")}</Th>
               {Object.keys(eventLabels).map((label, index) => (
                 <Th key={index}>{eventLabels[label as keyof EventLabels]}</Th>
               ))}
             </Tr>
           </Thead>
           <Tbody>
-            {data.country.buckets.map((country) => (
-              <Tr key={country.key}>
-                <Td>{countries.getName(country.key, "en") || country.key}</Td>
-                {Object.keys(eventLabels).map((label, index) => (
+            {processRawData(data).map((country) => (
+              <Tr key={country.name}>
+                <Td>{country.name}</Td>
+                {DEFAULT_EVENTS_LABELS.map((label, index) => (
                   <Td key={index}>
-                    {country[
-                      label as keyof EventLabels
-                    ]?.value.toLocaleString() || 0}
+                    {country[label as keyof EventLabels]?.toLocaleString() || 0}
                   </Td>
                 ))}
               </Tr>

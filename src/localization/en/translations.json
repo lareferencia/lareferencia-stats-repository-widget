@@ -24,6 +24,9 @@
         "csv-button": "Download CSV",
         "pie-chart-title": "Total events of the country",
 
+        "events": "Events",
+        "other-countries": "Other countries",
+
         "no-data": "No data available",
         "no-statistics": "No statistics available",
 
