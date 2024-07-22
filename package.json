@@ -5,7 +5,8 @@
   "main": "main.tsx",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/bundle-chunks.js && node scripts/bundle-single.js",
+    "build": "node scripts/bundle-single.js",
+    "build-chunks": "scripts/bundle-chunks.js",
     "build-vite": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

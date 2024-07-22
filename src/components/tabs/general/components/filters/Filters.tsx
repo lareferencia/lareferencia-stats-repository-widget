@@ -1,15 +1,18 @@
 import { Box } from "@chakra-ui/react";
 import { DateButtons } from "./DateButtons";
 import { LevelSelector } from "./LevelSelector";
-import {
-  ScopeLabels,
-} from "../../../../../interfaces/stadistics.interface";
+import { ScopeLabels } from "../../../../../interfaces/stadistics.interface";
+import { TFunction } from "i18next";
 
 interface FiltersProps {
   scopeLabels: ScopeLabels;
   activeScope: string;
   setActiveScope: (scope: string) => void;
-  t: any;
+  t: TFunction;
+  setRefresh: (refresh: boolean) => void;
+  setStartDate: (date: Date) => void;
+  refresh: boolean;
+  startDate: Date;
 }
 
 export const Filters = ({
@@ -17,6 +20,10 @@ export const Filters = ({
   scopeLabels,
   activeScope,
   setActiveScope,
+  setStartDate,
+  setRefresh,
+  refresh,
+  startDate
 }: FiltersProps) => {
   return (
     <Box my="6">
@@ -38,7 +45,13 @@ export const Filters = ({
           /> */}
         </Box>
         {/* Buttons 1y, 3y, 5y TODO: Work on this */}
-        <DateButtons t={t} />
+        <DateButtons
+          t={t}
+          setRefresh={setRefresh}
+          setStartDate={setStartDate}
+          refresh={refresh}
+          startDate={startDate}
+        />
       </Box>
     </Box>
   );

@@ -20,7 +20,7 @@ type MetricKey = "views" | "downloads" | "outlinks" | "conversions";
 
 export const processRawData = (data: ByCountryStats) => {
 
-    let pieData: ProcessedData[] = [];
+    let processedData: ProcessedData[] = [];
 
     const countryList = data.country.conversions.buckets.map(
         (bucket) => bucket.key
@@ -52,8 +52,8 @@ export const processRawData = (data: ByCountryStats) => {
             countryData.downloads +
             countryData.outlinks +
             countryData.conversions;
-        pieData.push(countryData);
+        processedData.push(countryData);
     });
 
-    return pieData;
+    return processedData;
 }

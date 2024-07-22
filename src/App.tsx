@@ -155,6 +155,9 @@ function App() {
               selectedRepository={selectedRepository}
               startDate={startDate}
               endDate={endDate}
+              refresh={refresh}
+              setRefresh={setRefresh}
+              setStartDate={setStartDate}
             />
           )}
         </Box>

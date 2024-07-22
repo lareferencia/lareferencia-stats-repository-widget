@@ -12,6 +12,10 @@ interface GeneralTabProps {
   setActiveScope: (scope: string) => void;
   t: any;
   tabIndex: number;
+  setRefresh: (refresh: boolean) => void;
+  setStartDate: (date: Date) => void;
+  refresh: boolean;
+  startDate: Date;
 }
 
 const GeneralTab = ({
@@ -22,6 +26,10 @@ const GeneralTab = ({
   setActiveScope,
   t,
   tabIndex,
+  setStartDate,
+  setRefresh,
+  refresh,
+  startDate
 }: GeneralTabProps) => {
   return (
     <>
@@ -38,6 +46,10 @@ const GeneralTab = ({
         scopeLabels={scopeLabels}
         activeScope={activeScope}
         setActiveScope={setActiveScope}
+        setStartDate={setStartDate}
+        setRefresh={setRefresh}
+        refresh={refresh}
+        startDate={startDate}
       />
 
       {/* Stacked bar chart */}

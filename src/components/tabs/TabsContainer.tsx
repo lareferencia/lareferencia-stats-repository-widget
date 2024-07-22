@@ -25,6 +25,9 @@ type TabsContainerProps = {
   selectedRepository: Repository;
   startDate: Date;
   endDate: Date ;
+  setRefresh: (refresh: boolean) => void;
+  setStartDate: (date: Date) => void;
+  refresh: boolean;
 };
 
 const TabsContainer = ({
@@ -34,7 +37,10 @@ const TabsContainer = ({
   t,
   selectedRepository,
   startDate,
-  endDate
+  endDate,
+  setRefresh,
+  setStartDate,
+  refresh
 }: TabsContainerProps) => {
   // State to manage the active scope level, Default value is 'ALL'
   const [activeScope, setActiveScope] = useState("ALL");
@@ -86,6 +92,10 @@ const TabsContainer = ({
               setActiveScope={setActiveScope}
               t={t}
               tabIndex={tabIndex}
+              setStartDate={setStartDate}
+              setRefresh={setRefresh}
+              refresh={refresh}
+              startDate={startDate}
             />
           </TabPanel>
 
