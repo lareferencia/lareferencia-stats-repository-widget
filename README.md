@@ -29,7 +29,7 @@
    	scriptElement.id = globalVar;
    	scriptElement.src = cdnUrl;
    	scriptElement.type = 'module';
-   	scriptElement.defer = true; // Use defer instead of async if appropriate
+   	scriptElement.defer = true;
    
    	scriptElement.onerror = function() {
  	console.error(`Failed to load script ${scriptElement.src}`);
@@ -43,42 +43,39 @@
 	"script",
    	"lrhw",
 	"parameters",
-  	"https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"
+  	"https://cdn.jsdelivr.net/gh/lareferencia/lareferencia-historic-widget@0.0.1/dist/historic-widget.js"
    	);
    	window['lrhw']({
     		widget_div_id: "lrhw-widget",
    		repositories_list: [
    			{
-   			label:"[[Nombre del repositorio]]",
-   			value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
+   			    label:"[[Nombre del repositorio]]",
+   			    value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
    			},
    			{
-   			label:"[[Nombre del repositorio]]",
-   			value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
+   			    label:"[[Nombre del repositorio]]",
+   			    value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
    			},
    		],
     		default_repository:
    			{
-   			label:"[[Nombre del repositorio]]",
- 			value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
+   			    label:"[[Nombre del repositorio]]",
+ 			    value: "[[id del repositorio, por ejemplo opendoar::xxxx]]",
 			},
-   		scope_labels:
-   		{
-    			N: "[[Nombre Nodo Nacional]]",
-   		},
+   		scope_labels: { N: "[[Nombre Nodo Nacional]]" },
    		});
    </script>
    
    ```
 
-3. Dicho script consta de dos partes, la primera es una función para cargar los archivos .js de cdn.jsdeliver ("https://cdn.jsdelivr.net/gh/lareferencia/lrw@1.1.5/dist/lrw.js"), el numero que sigue luego de la @ es la versión del widget, debe ser modificado cuando hayan actualizaciones disponibles.
+3. Dicho script consta de dos partes, la primera es una función para cargar los archivos .js de cdn.jsdeliver ("https://cdn.jsdelivr.net/gh/lareferencia/lareferencia-historic-widget@0.0.1/dist/historic-widget.js"), el numero que sigue luego de la @ es la versión del widget, debe ser modificado cuando hayan actualizaciones disponibles.
 
 4. La segunda parte es un objeto dentro de "window['lrhw]" que debe ser modificado con los repositorios que se quieren mostrar en el widget, a continuacion detallamos como modificarlos.
 
-   ### 4. Configuracion de los repositorios a exibir.
+   ### 4. Configuracion de los repositorios a exhibir.
 
-1. repositories_list, es arreglo de objetos, cada objeto tiene un label, y un value.
-      Reemplazar el valor de label quitando los [[]] con el nombre del repositorio, luego reemplazar el valor de value quitando los [[]] por el id del repositorio, por ejemplo:
+1. repositories_list, es un arreglo de objetos, cada objeto tiene un label, y un value.
+      Reemplazar el valor del label quitando los [[]] con el nombre del repositorio, luego reemplazar el valor de value quitando los [[]] por el id del repositorio, por ejemplo:
       
    	```
        	{
@@ -86,7 +83,7 @@
 	value: "[[id del repositior, por ejemplo opendoar::xxxx]]",
     	}
 	
-	Por ejemplo, Reemplazar por:
+	quedaria reemplazado por:
 	
 	{
 	label:"Repositorio Institucional de la Universidad Carlos III de Madrid",
@@ -94,7 +91,10 @@
  	},
 	```
     
-      El widget posee un selector para cambiar de repositorios en tiempo real y ver las estadistcas, dichos repositorios estan tomados de ese arreglo, por lo tanto agregar tantos objetos {} como repositorios se quiera mostrar.
+      El widget posee un selector para cambiar de repositorios en tiempo real y ver las estadistcas, dichos repositorios estan tomados del arreglo repositories_list, por lo tanto agregar tantos objetos {} como repositorios se quiera mostrar.
 
-2. default_repository, colocar aqui el repositorio por default, es decir el repositorio que primero se va a mostrar al entrar en el widget. Por otro lado, si no se colocaran repositorios en repositories_list, solo se mostrara el repositorio por default, es decir el que se colocó en default_repository. Por lo tanto este parametro no debe estar nunca vacio.
-   Aclaracion: El repositorio colocado por default, debe estar incluido tambien en la lista de repositorios en repositories_list.
+2. default_repository, colocar aqui un unico objeto que sera el repositorio por default, es decir el que se va a mostrar en caso de no colocar ninguna lista de repositorios y a su vez el que se va a mostrar primero al entrar por primera vez al sitio. Ese repositroio, tambien debe ser colocado dentro del arreglo repositories_list ya que si no, no se mostrara en el selector de repositorios.
+
+3. scope_labels: Reemplazar por el nombre correcto del Nodo Nacional, en caso contrario el widget mostrara "[[Nombre Nodo Nacional]]"
+## Notas:
+El widget ocupa el ancho y alto de la pantalla por lo tanto es ideal colocar el div en un lugar con suficiente espacio. Estamos trabajando, igualmente, en su capacidad responsive.
