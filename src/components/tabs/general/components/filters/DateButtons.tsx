@@ -34,9 +34,7 @@ export const DateButtons = ({
     
     
     setStartDate(date);
-    console.log(startDate);
-    console.log(date);
-    
+    console.log(date);  
     setRefresh(!refresh);
   };
   
