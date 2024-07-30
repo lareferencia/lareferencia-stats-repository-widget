@@ -15,6 +15,7 @@ import {
 
 import Loading from "../ui/Loading";
 import { Repository } from "../../interfaces/repository.interface";
+import { HelpTab } from "./help/HelpTab";
 
 // Types definition of the props passed to the component ChartsContainer
 type TabsContainerProps = {
@@ -118,8 +119,8 @@ const TabsContainer = ({
           </TabPanel>
 
           {/* Help tab */}
-          <TabPanel>
-            <Box>TO-DO: Agregar imagenes de ayuda luego</Box>
+          <TabPanel bgColor='white' borderRadius='8px'>
+            <HelpTab/>
           </TabPanel>
         </TabPanels>
       </Tabs>
