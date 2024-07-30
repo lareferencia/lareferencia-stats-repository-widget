@@ -68,6 +68,75 @@ export const DataTable = ({
     return total.toLocaleString();
   };
 
+  const getHeaders = () => {
+    let headers: string[] = [];
+    if (activeScope === "ALL") {
+      headers = [
+        "month",
+        ...Object.keys(scopeLabels).map(
+          (label) => scopeLabels[label as keyof ScopeLabels]
+        ),
+      ];
+    } else {
+      headers = [
+        "month",
+        ...DEFAULT_EVENTS_LABELS.map(
+          (label) => eventLabels[label as keyof EventLabels]
+        ),
+      ];
+    }
+
+    return headers;
+  };
+  const getRows = () => {
+    let rows: string[] = [];
+
+    if (activeScope === "ALL") {
+      rows = data.time.buckets.map((bucket) => {
+        return [
+          new Date(bucket.key_as_string).toLocaleString(
+            `${t("calendar-lang")}`,
+            { month: "short", year: "numeric" }
+          ),
+          DEFAULT_SCOPES_KEYS.map((scope) => renderValues(bucket, scope)).join(
+            ","
+          ),
+        ].join(",");
+      });
+    } else {
+      rows = data.time.buckets.map((bucket) => {
+        return [
+          new Date(bucket.key_as_string).toLocaleString(
+            `${t("calendar-lang")}`,
+            { month: "short", year: "numeric" }
+          ),
+          DEFAULT_EVENTS_LABELS.map(
+            (event) =>
+              bucket.level.buckets
+                .find((b) => b.key === activeScope)
+                ?.[event as keyof EventLabels]?.value.toLocaleString() || 0
+          ).join(","),
+        ].join(",");
+      });
+    }
+
+    return rows;
+  };
+  const handleDownloadCsv = () => {
+    const headers = getHeaders();
+    const rows = getRows();
+
+    const csvData = [headers.join(","), ...rows].join("\n");
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <Card padding="4" shadow="sm" borderRadius="12" mt={6}>
       <TableContainer>
@@ -110,7 +179,9 @@ export const DataTable = ({
           <Tfoot display="flex" justifyContent="start" py="4">
             <Tr>
               <Td>
-                <Button colorScheme="teal">{t("csv-button")}</Button>
+                <Button onClick={handleDownloadCsv} colorScheme="teal">
+                  {t("csv-button")}
+                </Button>
               </Td>
             </Tr>
           </Tfoot>
