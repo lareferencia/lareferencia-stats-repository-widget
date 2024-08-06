@@ -15,12 +15,15 @@ import {
   EventLabels,
   ScopeLabels,
   Statistics,
-  TimeBucket,
 } from "../../../../interfaces/stadistics.interface";
 import { TFunction } from "i18next";
 import { DEFAULT_EVENTS_LABELS, DEFAULT_SCOPES_KEYS } from "../../../../config";
 import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  handleDownloadCsv,
+  renderValues,
+} from "../utils/process-data-functions";
 
 type DataTableProps = {
   data: Statistics;
@@ -41,100 +44,12 @@ export const DataTable = ({
 
   const renderHeaderList = (labels: EventLabels | ScopeLabels) => {
     const headerList = Object.keys(labels).map((label, index) => (
-      <Th key={index}>{labels[label as keyof (EventLabels | ScopeLabels)]}</Th>
+      <Th key={index}>
+        {" "}
+        {labels[label as keyof (EventLabels | ScopeLabels)]}{" "}
+      </Th>
     ));
     return headerList;
-  };
-
-  const renderValues = (bucket: TimeBucket, scope: string) => {
-    if (scope === "ALL")
-      return bucket.level.buckets.reduce(
-        (acc, b) =>
-          acc +
-          (b.views?.value || 0) +
-          (b.downloads?.value || 0) +
-          (b.outlinks?.value || 0),
-        0
-      );
-
-    const levelBucket = bucket.level.buckets.find(
-      (b) => b.key === scope
-    ) as any;
-    const total =
-      (levelBucket?.views?.value || 0) +
-      (levelBucket?.downloads?.value || 0) +
-      (levelBucket?.outlinks?.value || 0);
-
-    return total.toLocaleString();
-  };
-
-  const getHeaders = () => {
-    let headers: string[] = [];
-    if (activeScope === "ALL") {
-      headers = [
-        "month",
-        ...Object.keys(scopeLabels).map(
-          (label) => scopeLabels[label as keyof ScopeLabels]
-        ),
-      ];
-    } else {
-      headers = [
-        "month",
-        ...DEFAULT_EVENTS_LABELS.map(
-          (label) => eventLabels[label as keyof EventLabels]
-        ),
-      ];
-    }
-
-    return headers;
-  };
-  const getRows = () => {
-    let rows: string[] = [];
-
-    if (activeScope === "ALL") {
-      rows = data.time.buckets.map((bucket) => {
-        return [
-          new Date(bucket.key_as_string).toLocaleString(
-            `${t("calendar-lang")}`,
-            { month: "short", year: "numeric" }
-          ),
-          DEFAULT_SCOPES_KEYS.map((scope) => renderValues(bucket, scope)).join(
-            ","
-          ),
-        ].join(",");
-      });
-    } else {
-      rows = data.time.buckets.map((bucket) => {
-        return [
-          new Date(bucket.key_as_string).toLocaleString(
-            `${t("calendar-lang")}`,
-            { month: "short", year: "numeric" }
-          ),
-          DEFAULT_EVENTS_LABELS.map(
-            (event) =>
-              bucket.level.buckets
-                .find((b) => b.key === activeScope)
-                ?.[event as keyof EventLabels]?.value.toLocaleString() || 0
-          ).join(","),
-        ].join(",");
-      });
-    }
-
-    return rows;
-  };
-  const handleDownloadCsv = () => {
-    const headers = getHeaders();
-    const rows = getRows();
-
-    const csvData = [headers.join(","), ...rows].join("\n");
-
-    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "data.csv";
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   return (
@@ -179,7 +94,18 @@ export const DataTable = ({
           <Tfoot display="flex" justifyContent="start" py="4">
             <Tr>
               <Td>
-                <Button onClick={handleDownloadCsv} colorScheme="teal">
+                <Button
+                  onClick={() =>
+                    handleDownloadCsv(
+                      activeScope,
+                      data,
+                      t,
+                      scopeLabels,
+                      eventLabels
+                    )
+                  }
+                  colorScheme="teal"
+                >
                   {t("csv-button")}
                 </Button>
               </Td>

@@ -20,7 +20,8 @@ export const fetchData = async (
             source_id,
             start_date,
             end_date,
-            time_unit
+            time_unit,
+            limit: 10
         }
 
         const { data } = await axios.get(baseUrl + ws, { params })

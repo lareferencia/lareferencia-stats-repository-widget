@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   Table,
   TableContainer,
@@ -16,6 +15,7 @@ import { EventLabels } from "../../../../interfaces/stadistics.interface";
 import { TFunction } from "i18next";
 import { processRawData } from "../../../../utils/process-raw-data";
 import { DEFAULT_EVENTS_LABELS } from "../../../../config";
+import { CsvButton } from "./CsvButton";
 
 type ByCountryTableProps = {
   data: ByCountryStats;
@@ -27,40 +27,6 @@ export const ByCountryTable = ({
   eventLabels,
   t,
 }: ByCountryTableProps) => {
-  
-  const dataToCsv = () => {
-    const processData = processRawData(data);
-    const headers = [
-      "country",
-      "views",
-      "downloads",
-      "outlinks",
-      "conversions",
-      "total",
-    ];
-    const rows = processData.map((row) => {
-      return [
-        row.name,
-        row.views,
-        row.downloads,
-        row.outlinks,
-        row.conversions,
-        row.value,
-      ].join(",");
-    });
-    return [headers.join(","), ...rows].join("\n");
-  };
-  const handleDownloadCsv = () => {
-    const csvData = dataToCsv();
-    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "data.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <Card padding="4" shadow="sm" borderRadius="12" mt={6}>
       <TableContainer>
@@ -86,13 +52,7 @@ export const ByCountryTable = ({
             ))}
           </Tbody>
           <Tfoot display="flex" justifyContent="start" py="4">
-            <Tr>
-              <Td>
-                <Button onClick={handleDownloadCsv} colorScheme="teal">
-                  {t("csv-button")}
-                </Button>
-              </Td>
-            </Tr>
+            <CsvButton data={data} t={t} />
           </Tfoot>
         </Table>
       </TableContainer>

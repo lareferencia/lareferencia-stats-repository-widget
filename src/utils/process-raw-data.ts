@@ -5,10 +5,8 @@ import enLocale from "i18n-iso-countries/langs/en.json";
 countries.registerLocale(enLocale);
 
 
-
-
 interface CountryData {
-    name: string ;
+    name: string;
     value: number;
     views: number;
     downloads: number;
@@ -36,7 +34,7 @@ export const processRawData = (data: ByCountryStats) => {
             outlinks: 0,
             conversions: 0,
         };
- 
+
         const events = DEFAULT_EVENTS_LABELS as MetricKey[];
 
         events.forEach((metric) => {
@@ -50,8 +48,7 @@ export const processRawData = (data: ByCountryStats) => {
         countryData.value =
             countryData.views +
             countryData.downloads +
-            countryData.outlinks +
-            countryData.conversions;
+            countryData.outlinks;
         processedData.push(countryData);
     });
 
