@@ -1,1 +1,0 @@
-import{j as t,B as r}from"./index-a41f8ece.js";const o=({errorMessage:e})=>t.jsx(r,{fontSize:"2rem",fontWeight:"bold",height:"100vh",display:"flex",justifyContent:"center",alignItems:"center",children:e});export{o as default};
