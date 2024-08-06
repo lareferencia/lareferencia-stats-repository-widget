@@ -1,6 +1,6 @@
 import { Badge, Box, Image } from "@chakra-ui/react";
-import helpImg from "/assets/help-img.png";
-import helpImg2 from "/assets/help-img2.png";
+import helpImg from "../../../assets/help-img.png";
+import helpImg2 from "../../../assets/help-img2.png";
 
 export const HelpTab = () => {
   return (
