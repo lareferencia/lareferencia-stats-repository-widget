@@ -25,6 +25,7 @@ import { Statistics } from "./interfaces/stadistics.interface";
 import { getEventLabels, getScopeLabels } from "./utils/scopes-and-events";
 import { Repository } from "./interfaces/repository.interface";
 import { DatesPicker } from "./components/ui/DatesPicker";
+import { Footer } from "./components/ui/Footer";
 
 function App() {
   // Translation React hook
@@ -160,6 +161,9 @@ function App() {
               setStartDate={setStartDate}
             />
           )}
+          <Box px='4'>
+            <Footer />
+          </Box>
         </Box>
       ) : (
         <ErrorView errorMessage={errorMessage} />

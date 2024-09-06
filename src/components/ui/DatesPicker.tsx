@@ -145,7 +145,7 @@ export const DatesPicker = ({
           textAlign="center"
           fontWeight="500"
           as="span"
-          w="150px"
+          w="200px"
           p="2"
           cursor="pointer"
           onClick={() => setIsStartDateBoxVisible(true)}
@@ -212,7 +212,7 @@ export const DatesPicker = ({
           textAlign="center"
           fontWeight="500"
           as="span"
-          w="150px"
+          w="200px"
           p="2"
           cursor="pointer"
           onClick={() => setIsEndDateBoxVisible(true)}

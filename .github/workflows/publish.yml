@@ -1,0 +1,59 @@
+name: Git Tag 
+
+on:
+  push:
+    branches: [ "main" ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Set Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+
+    - name: package-version
+      run: node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
+
+    - name: Run install
+      uses: borales/actions-yarn@v4
+      with:
+        cmd: install # will run `yarn install` command
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
+
+    - name: Build production bundle
+      uses: borales/actions-yarn@v4
+      with:
+        cmd: build # will run `yarn build` command
+
+    - name: Pushes dist 
+      uses: dmnemec/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: dist/
+        destination_repo: 'lareferencia/lrhw'
+        user_email: 'lmatas@gmail.com'
+        user_name: 'lmatas'
+        commit_message: 'Update'
+
+    - name: Pushes package.json 
+      uses: dmnemec/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: package.json
+        destination_repo: 'lareferencia/lrhw'
+        user_email: 'lmatas@gmail.com'
+        user_name: 'lmatas'
+        commit_message: 'Update'
+    
