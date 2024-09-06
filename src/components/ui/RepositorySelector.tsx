@@ -1,6 +1,5 @@
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useEffect } from "react";
 import { Repository } from "../../interfaces/repository.interface";
 
 type Props = {
@@ -17,12 +16,17 @@ const RepositorySelector = ({
   refresh,
   setRefresh,
 }: Props) => {
-  useEffect(() => {}, []);
+
 
   const handleChangeRepository = (repository: Repository) => {
     setSelectedRepository(repository);
     setRefresh(!refresh);
   };
+
+  const portalRegional = repositoriesList.find(site => site.value === 'SITEID::1');
+  const sortedRepositories = repositoriesList.filter(site => site.value !== 'SITEID::1').sort((a, b) => a.label.localeCompare(b.label));
+  const repositoriesListSorted = portalRegional ? [portalRegional, ...sortedRepositories] : sortedRepositories;
+  
 
   return (
     <Menu>
@@ -35,7 +39,7 @@ const RepositorySelector = ({
         {selectedRepository.label}
       </MenuButton>
       <MenuList>
-        {repositoriesList.map((repository) => (
+        {repositoriesListSorted.map((repository) => (
           <MenuItem
             bg={`${
               selectedRepository.value === repository.value ? "gray.100" : ""
