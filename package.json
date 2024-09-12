@@ -1,13 +1,13 @@
 {
   "name": "repository-widget",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "main.tsx",
   "scripts": {
     "dev": "vite",
-    "build-chunks": "node scripts/bundle-single.js",
-    "build-vite": "node scripts/bundle-chunks.js",
-    "build": "tsc && vite build",
+    "build": "node scripts/bundle-single.js",
+    "build-chunks": "node scripts/bundle-chunks.js",
+    "build-vite": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
