@@ -3,9 +3,17 @@ import * as echarts from "echarts";
 
 import { Box, GridItem } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
-import { GeoJson } from "../../../../../interfaces/geo-json.interface";
+// import { GeoJson } from "../../../../../interfaces/geo-json.interface";
 import { regionLayout } from "./utils/regionMapPosition";
 import { ProcessedData } from "../../../../../interfaces";
+
+import Africa from '../../../../../assets/africa.json';
+import Asia from '../../../../../assets/asia.json';
+import Europe from '../../../../../assets/europe.json';
+import NorthAmerica from '../../../../../assets/northamerica.json';
+import Oceania from '../../../../../assets/oceania.json';
+import SouthAmerica from '../../../../../assets/southamerica.json';
+
 
 type Props = {
   processedData: ProcessedData[];
@@ -16,26 +24,37 @@ type Props = {
 export const MapChart = ({ processedData, regionSelected, t }: Props) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
-  const fetchGeoJson = async (regionSelected: string) => {
-    try {
-      const response = await fetch(`/assets/${regionSelected}.json`);
+  // const fetchGeoJson = async (regionSelected: string) => {
+  //   try {
+  //     const response = await fetch(`/assets/${regionSelected}.json`);
 
-      const geojson = await response.json();
+  //     const geojson = await response.json();
 
-      return geojson;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     return geojson;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   useEffect(() => {
     const myChart = echarts.init(chartRef.current);
 
     if (chartRef.current) {
+
+      const geoJsonMap = {
+        "africa": Africa,
+        "asia": Asia,
+        "europe": Europe,
+        "northamerica": NorthAmerica,
+        "oceania": Oceania,
+        "southamerica": SouthAmerica,
+      }
+
       myChart.showLoading();
 
-      fetchGeoJson(regionSelected)
-        .then((geojson: GeoJson) => {
+      
+          const geojson = geoJsonMap[regionSelected as keyof typeof geoJsonMap];
+          
           const showCountries = processedData.map((country) => {
             let countryName = country.name
             if (countryName.toLowerCase() === "people's republic of china") {
@@ -137,10 +156,6 @@ export const MapChart = ({ processedData, regionSelected, t }: Props) => {
           myChart.setOption(option);
 
           option && myChart.setOption(option);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
     }
   }, [regionSelected]);
 
