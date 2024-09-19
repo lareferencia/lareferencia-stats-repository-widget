@@ -14,7 +14,7 @@ interface PieChartProps {
   t: TFunction;
 }
 
-export const PieChart = ({ data, tabIndex, setCountry, t }: PieChartProps) => {
+const PieChart = ({ data, tabIndex, setCountry, t }: PieChartProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,3 +92,5 @@ export const PieChart = ({ data, tabIndex, setCountry, t }: PieChartProps) => {
     </Box>
   );
 };
+
+export default PieChart;

@@ -12,7 +12,7 @@ type Props = {
   t: TFunction;
 };
 
-export const RegionsSelector = ({
+const RegionsSelector = ({
   regions,
   regionSelected,
   setRegionSelected,
@@ -42,3 +42,5 @@ export const RegionsSelector = ({
     </Box>
   );
 };
+
+export default RegionsSelector;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Box, Card } from "@chakra-ui/react";
 
@@ -14,8 +14,10 @@ import {
 import Loading from "../../ui/Loading";
 import ErrorView from "../../ui/ErrorView";
 import { ByCountryPanels, ByCountryTable } from "./components";
-import { PieChart } from "./chart/PieChart";
-import { MapSectionContainer } from "./chart/map-chart";
+
+
+const MapSectionContainer = React.lazy(() => import("./chart/map-chart/MapSectionContainer"));
+const PieChart = React.lazy(() => import("./chart/PieChart"));
 
 type ByCountryTabProps = {
   tabIndex: number;

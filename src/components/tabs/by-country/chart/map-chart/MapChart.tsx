@@ -7,12 +7,12 @@ import { useEffect, useRef } from "react";
 import { regionLayout } from "./utils/regionMapPosition";
 import { ProcessedData } from "../../../../../interfaces";
 
-import Africa from '../../../../../assets/africa.json';
-import Asia from '../../../../../assets/asia.json';
-import Europe from '../../../../../assets/europe.json';
-import NorthAmerica from '../../../../../assets/northamerica.json';
-import Oceania from '../../../../../assets/oceania.json';
-import SouthAmerica from '../../../../../assets/southamerica.json';
+// import Africa from '../../../../../assets/africa.json';
+// import Asia from '../../../../../assets/asia.json';
+// import Europe from '../../../../../assets/europe.json';
+// import NorthAmerica from '../../../../../assets/northamerica.json';
+// import Oceania from '../../../../../assets/oceania.json';
+// import SouthAmerica from '../../../../../assets/southamerica.json';
 
 
 type Props = {
@@ -21,40 +21,42 @@ type Props = {
   regionSelected: string;
 };
 
-export const MapChart = ({ processedData, regionSelected, t }: Props) => {
+const MapChart = ({ processedData, regionSelected, t }: Props) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // const fetchGeoJson = async (regionSelected: string) => {
-  //   try {
-  //     const response = await fetch(`/assets/${regionSelected}.json`);
+  const fetchGeoJson = async (regionSelected: string) => {
+    try {
+      const response = await fetch(`https://cdn.jsdelivr.net/gh/lareferencia/lrhw@1.0.5/dist/assets/${regionSelected}.json`);
 
-  //     const geojson = await response.json();
+      const geojson = await response.json();
 
-  //     return geojson;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+      return geojson;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const myChart = echarts.init(chartRef.current);
 
     if (chartRef.current) {
 
-      const geoJsonMap = {
-        "africa": Africa,
-        "asia": Asia,
-        "europe": Europe,
-        "northamerica": NorthAmerica,
-        "oceania": Oceania,
-        "southamerica": SouthAmerica,
-      }
+      // const geoJsonMap = {
+      //   "africa": Africa,
+      //   "asia": Asia,
+      //   "europe": Europe,
+      //   "northamerica": NorthAmerica,
+      //   "oceania": Oceania,
+      //   "southamerica": SouthAmerica,
+      // }
 
       myChart.showLoading();
 
       
-          const geojson = geoJsonMap[regionSelected as keyof typeof geoJsonMap];
+          // const geojson = geoJsonMap[regionSelected as keyof typeof geoJsonMap];
           
+          fetchGeoJson(regionSelected)
+          .then((geojson) => {
           const showCountries = processedData.map((country) => {
             let countryName = country.name
             if (countryName.toLowerCase() === "people's republic of china") {
@@ -157,6 +159,8 @@ export const MapChart = ({ processedData, regionSelected, t }: Props) => {
 
           option && myChart.setOption(option);
     }
+);
+  }
   }, [regionSelected]);
 
   return (
@@ -165,3 +169,5 @@ export const MapChart = ({ processedData, regionSelected, t }: Props) => {
     </GridItem>
   );
 };
+
+export default MapChart;

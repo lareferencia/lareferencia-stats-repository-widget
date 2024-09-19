@@ -1,19 +1,24 @@
 import { Grid, GridItem } from "@chakra-ui/react";
-import { MapChart } from "./MapChart";
+// import { MapChart } from "./MapChart";
 import { TFunction } from "i18next";
 import { ByCountryStats } from "../../../../../interfaces/byCountry.interface";
-import { RegionsSelector } from "../../components/RegionsSelector";
+// import { RegionsSelector } from "../../components/RegionsSelector";
 import { CountriesList } from "./CountriesList";
 import { getRegionsByCountry } from "./utils/regionMapping";
-import { useState } from "react";
+import React, { useState } from "react";
 import { processRawData } from "../../../../../utils/process-raw-data";
+
+const RegionsSelector = React.lazy(() => import("../../components/RegionsSelector"));
+const MapChart = React.lazy(() => import("./MapChart"));
+
+
 
 type Props = {
   data: ByCountryStats;
   t: TFunction;
 };
 
-export const MapSectionContainer = ({ data, t }: Props) => {
+const MapSectionContainer = ({ data, t }: Props) => {
   const processedData = processRawData(data);
   const regions = getRegionsByCountry(processedData);
   
@@ -41,3 +46,5 @@ export const MapSectionContainer = ({ data, t }: Props) => {
     </Grid>
   );
 };
+
+export default MapSectionContainer;
