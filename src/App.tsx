@@ -108,7 +108,7 @@ function App() {
   // Fetch data on component mount
   useEffect(() => {
     fetchDataAsync();
-  }, [refresh]);
+  }, [ refresh, defaultRepository ]);
 
   return (
     <>
