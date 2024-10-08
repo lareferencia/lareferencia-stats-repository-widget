@@ -8,11 +8,12 @@ const inlineImage = require("esbuild-plugin-inline-image");
 require("esbuild")
   .build({
     logLevel: "info",
+    outdir: "dist/assets/chunks",
     entryPoints: ["src/main.tsx"],
     inject:["scripts/react-shim.js"],
     treeShaking: true,
     bundle: true,
-    outfile: "dist/app.js",
+    // outfile: "dist/app.js",
     plugins: [cssModulesPlugin()],
     loader: {
         ".js": "tsx", '.png': 'dataurl'

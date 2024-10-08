@@ -29,7 +29,6 @@ import { Footer } from "./components/ui/Footer";
 
 function App() {
 
-  console.log('se ejecuto el app');
   
   // Translation React hook
   const { t, i18n } = useTranslation();
@@ -69,7 +68,6 @@ function App() {
 
   // Fetch data from API
   const fetchDataAsync = async () => {
-    console.log('se ejecuto el fetchdataasync', defaultRepository);
     
     if (selectedRepository.value === "") {
       setSelectedRepository(defaultRepository);
@@ -112,7 +110,6 @@ function App() {
 
   // Fetch data on component mount
   useEffect(() => {
-    console.log('se ejecuto el useeffect', defaultRepository);
     
     fetchDataAsync();
   }, [ refresh, defaultRepository ]);
