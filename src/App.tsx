@@ -116,7 +116,6 @@ function App() {
 
   return (
     <>
-    <h1>title random</h1>
       <Box
         display="flex"
         flexWrap="wrap"
