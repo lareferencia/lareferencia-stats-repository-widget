@@ -18,7 +18,7 @@ export const DateButtons = ({
   const dates = [
     {
       label: `6 ${t("months")}`,
-      callback: new Date(new Date().setFullYear(new Date().getMonth() - 6)),
+      callback: new Date(new Date().setMonth(new Date().getMonth() - 6)),
     },
     {
       label: `1 ${t("year")}`,
@@ -30,15 +30,15 @@ export const DateButtons = ({
     },
   ];
 
+  
   const handleSetDate = (date: Date) => {
-    
-    
     setStartDate(date);
-    console.log(date);  
     setRefresh(!refresh);
   };
   
 
+  
+  
   return (
     <Box borderRadius="12">
       <Box display="flex" gap="2">
@@ -47,13 +47,13 @@ export const DateButtons = ({
             key={label}
             shadow="sm"
             borderRadius="12"
-            p="1"
             justifyContent="center"
             rounded="lg"
           >
             <Button
               onClick={() => handleSetDate(callback)}
               size="sm"
+              border='none'
               fontWeight="bold"
               variant={startDate === callback ? "solid" : "outline"}
             >

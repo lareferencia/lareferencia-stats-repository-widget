@@ -21,9 +21,10 @@ export const LevelSelector = ({
   setActiveScope,
 }: LevelSelectorProps) => {
   return (
-    <Card shadow="sm" mr="4" borderRadius="6" p="1">
+    <Card shadow="sm" mr="4" borderRadius="6" >
       <Menu>
         <MenuButton
+          border='none'
           as={Button}
           variant="outline"
           rightIcon={<ChevronDownIcon />}
