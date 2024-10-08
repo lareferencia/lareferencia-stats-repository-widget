@@ -28,6 +28,9 @@ import { DatesPicker } from "./components/ui/DatesPicker";
 import { Footer } from "./components/ui/Footer";
 
 function App() {
+
+  console.log('se ejecuto el app');
+  
   // Translation React hook
   const { t, i18n } = useTranslation();
 
@@ -66,6 +69,8 @@ function App() {
 
   // Fetch data from API
   const fetchDataAsync = async () => {
+    console.log('se ejecuto el fetchdataasync', defaultRepository);
+    
     if (selectedRepository.value === "") {
       setSelectedRepository(defaultRepository);
     } //TODO: ver luego
@@ -107,11 +112,14 @@ function App() {
 
   // Fetch data on component mount
   useEffect(() => {
+    console.log('se ejecuto el useeffect', defaultRepository);
+    
     fetchDataAsync();
   }, [ refresh, defaultRepository ]);
 
   return (
     <>
+    <h1>title random</h1>
       <Box
         display="flex"
         flexWrap="wrap"
