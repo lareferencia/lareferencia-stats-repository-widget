@@ -65,6 +65,7 @@ function App() {
   const [endDate, setEndDate] = useState<Date>(currentDate);
   const start_date = startDate || DEFAULT_START_DATE; //TODO: poner startDate
   const end_date = endDate || DEFAULT_END_DATE; //TODO: poner endDate
+console.log(endDate);
 
   // Fetch data from API
   const fetchDataAsync = async () => {
