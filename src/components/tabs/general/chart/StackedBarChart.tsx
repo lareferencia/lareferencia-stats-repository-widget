@@ -33,7 +33,6 @@ const StackedBarChart = ({
 }: StackedBarProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
-  console.log('datos raw en chart', data);
   
   useEffect(() => {
     const myChart = echarts.init(chartRef.current);
@@ -85,7 +84,6 @@ const StackedBarChart = ({
         });
       }
 
-      console.log('datos antes del proceso del axis', data.time.buckets);
       
       const xAxisData = data.time.buckets.map((entry) => {
       const date = new Date(entry.key_as_string);
@@ -98,7 +96,6 @@ const StackedBarChart = ({
       return `${month} ${year}`;
     });
 
-    console.log('Fechas del axies luego del proceso', xAxisData);
 
       const maxViews = Math.max(...series[0].data);
       const maxDownloads = Math.max(...series[1].data);

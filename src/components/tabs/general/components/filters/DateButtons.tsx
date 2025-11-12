@@ -17,11 +17,17 @@ export const DateButtons = ({
   refresh,
   startDate
 }: DateButtonsProps) => {
-  const [defaultDates, setDefaultDates] = useState<Array<{
-    label: string;
-    callback: Date;
-    key: string; // Identificador único para cada opción
-  }>>([]);
+  const [defaultDates, setDefaultDates] = useState<
+    Array<{ label: string; callback: Date; key: string }>
+  >([]);
+
+  // Función para restar meses exactos y forzar día 1
+  const subtractMonthsDayOne = (date: Date, months: number) => {
+    const newDate = new Date(date);
+    newDate.setMonth(newDate.getMonth() - months);
+    newDate.setDate(1);
+    return newDate;
+  };
 
   // Inicialización de fechas
   useEffect(() => {
@@ -29,50 +35,46 @@ export const DateButtons = ({
     const initialDates = [
       {
         label: `6 ${t("months")}`,
-        callback: new Date(new Date(now).setMonth(now.getMonth() - 6)),
+        callback: subtractMonthsDayOne(now, 6),
         key: '6months'
       },
       {
         label: `1 ${t("year")}`,
-        callback: new Date(new Date(now).setFullYear(now.getFullYear() - 1)),
+        callback: subtractMonthsDayOne(now, 12),
         key: '1year'
       },
       {
         label: `3 ${t("years")}`,
-        callback: new Date(new Date(now).setFullYear(now.getFullYear() - 3)),
+        callback: subtractMonthsDayOne(now, 36),
         key: '3years'
       },
     ];
-    
+
     setDefaultDates(initialDates);
 
-    // Establecer fecha inicial solo si no hay una startDate definida
     if (!startDate) {
       setStartDate(initialDates[0].callback);
     }
+
   }, [t]);
 
   const handleSetDate = (date: Date) => {
-    setStartDate(date);
+    // Restar un mes antes de enviar a la API
+    const adjustedDate = new Date(date);
+    adjustedDate.setMonth(adjustedDate.getMonth() - 1);
+    adjustedDate.setDate(1); // Siempre día 1
+
+    setStartDate(adjustedDate);
     setRefresh(!refresh);
   };
 
-  // Función optimizada para comparar rangos de fechas
+  // Comparación exacta de fechas
   const isSameRange = (selectedDate: Date, rangeDate: Date) => {
     if (!selectedDate || !rangeDate) return false;
-    
-    // Comparar la diferencia en meses
-    const monthDiff = (d1: Date, d2: Date) => {
-      return (d1.getFullYear() - d2.getFullYear()) * 12 + (d1.getMonth() - d2.getMonth());
-    };
-    
-    const diff = monthDiff(new Date(), selectedDate);
-    
-    if (Math.abs(diff) === 6) return rangeDate.getTime() === defaultDates[0]?.callback.getTime();
-    if (Math.abs(diff) === 12) return rangeDate.getTime() === defaultDates[1]?.callback.getTime();
-    if (Math.abs(diff) === 36) return rangeDate.getTime() === defaultDates[2]?.callback.getTime();
-    
-    return false;
+
+    return selectedDate.getFullYear() === rangeDate.getFullYear() &&
+           selectedDate.getMonth() === rangeDate.getMonth() &&
+           selectedDate.getDate() === rangeDate.getDate();
   };
 
   return (
