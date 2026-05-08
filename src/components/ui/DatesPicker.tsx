@@ -1,8 +1,9 @@
 import { Box, Button, Text } from "@chakra-ui/react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { TFunction } from "i18next";
 import { FaSyncAlt } from "react-icons/fa";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { ShadowRootContext } from "../../main";
 
 const months = [
   { id: 1, name: "january" },
@@ -75,17 +76,18 @@ export const DatesPicker = ({
   const startDateRef = useRef<HTMLDivElement | null>(null);
   const endDateRef = useRef<HTMLDivElement | null>(null);
 
+  const shadowContainer = useContext(ShadowRootContext);
+
   useEffect(() => {
-    const shadowRoot = document.getElementById("lrhw-widget")?.shadowRoot;
-    const rootElement = shadowRoot?.firstChild as HTMLElement;
+    if (!shadowContainer) return;
 
     const handleClick = (e: MouseEvent) => handleClickOutside(e);
 
-    rootElement?.addEventListener("mousedown", handleClick);
+    shadowContainer.addEventListener("mousedown", handleClick);
     return () => {
-      rootElement?.removeEventListener("mousedown", handleClick);
+      shadowContainer.removeEventListener("mousedown", handleClick);
     };
-  }, [refresh, startDateValue, endDateValue]);
+  }, []);
 
   const handleClickOutside = (event: MouseEvent) => {
     // Verificar si el clic fue dentro del contenedor del date picker
