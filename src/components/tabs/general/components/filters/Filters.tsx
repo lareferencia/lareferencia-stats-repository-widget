@@ -13,6 +13,7 @@ interface FiltersProps {
   setStartDate: (date: Date) => void;
   refresh: boolean;
   startDate: Date;
+  endDate: Date;
 }
 
 export const Filters = ({
@@ -23,7 +24,8 @@ export const Filters = ({
   setStartDate,
   setRefresh,
   refresh,
-  startDate
+  startDate,
+  endDate
 }: FiltersProps) => {
   return (
     <Box my="6">
@@ -51,6 +53,7 @@ export const Filters = ({
           setStartDate={setStartDate}
           refresh={refresh}
           startDate={startDate}
+          endDate={endDate}
         />
       </Box>
     </Box>

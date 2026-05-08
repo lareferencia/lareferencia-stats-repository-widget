@@ -40,6 +40,7 @@ export const DatesPicker = ({
 }: DatesPickerProps) => {
   const [isStartDateBoxVisible, setIsStartDateBoxVisible] = useState(false);
   const [isEndDateBoxVisible, setIsEndDateBoxVisible] = useState(false);
+  const [endDateError, setEndDateError] = useState<string>("");
 
    // Obtener la fecha actual
   const currentDate = new Date();
@@ -56,8 +57,23 @@ export const DatesPicker = ({
     month: endDate.getMonth() + 1,
   });
 
-  const startDateRef = useRef<any>(null);
-  const endDateRef = useRef<any>(null);
+  // Sync local state when props change externally (e.g., from DateButtons)
+  useEffect(() => {
+    setStartDateValue({
+      year: startDate.getFullYear(),
+      month: startDate.getMonth() + 1,
+    });
+  }, [startDate]);
+
+  useEffect(() => {
+    setEndDateValue({
+      year: endDate.getFullYear(),
+      month: endDate.getMonth() + 1,
+    });
+  }, [endDate]);
+
+  const startDateRef = useRef<HTMLDivElement | null>(null);
+  const endDateRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const shadowRoot = document.getElementById("lrhw-widget")?.shadowRoot;
@@ -105,30 +121,28 @@ export const DatesPicker = ({
   };
 
   const handleSelectStartDate = (month: number) => {
-    const newStartDateValue = {
-      ...startDateValue,
-      month: month,
-    };
-
-    setStartDateValue(newStartDateValue);
-
-    const year = startDateValue.year;
-
-    const newStartDate = new Date(year, month - 1, 1);
-
-    setStartDate(newStartDate);
+    setStartDateValue(prev => {
+      const newStartDate = new Date(prev.year, month - 1, 1);
+      setStartDate(newStartDate);
+      return { ...prev, month };
+    });
     setIsStartDateBoxVisible(false);
   };
 
   const handleSelectEndDate = (month: number) => {
-    const newEndDateValue = {
-      ...endDateValue,
-      month: month,
-    };
-    setEndDateValue(newEndDateValue);
-    const year = endDateValue.year;
-    const newEndDate = new Date(year, month - 1, 30);
-    setEndDate(newEndDate);
+    const newEndDate = new Date(endDateValue.year, month - 1, 30);
+
+    if (newEndDate < startDate) {
+      setEndDateError(t("error_end_before_start") || "End date cannot be before start date");
+      return;
+    }
+
+    setEndDateError("");
+    setEndDateValue(prev => {
+      const newerEndDate = new Date(prev.year, month - 1, 30);
+      setEndDate(newerEndDate);
+      return { ...prev, month };
+    });
     setIsEndDateBoxVisible(false);
   };
 
@@ -309,6 +323,11 @@ export const DatesPicker = ({
 ))}
             </Box>
           </Box>
+        )}
+        {endDateError && (
+          <Text color="red.500" fontSize="xs" position="absolute" top="12" right="0">
+            {endDateError}
+          </Text>
         )}
       </Box>
 

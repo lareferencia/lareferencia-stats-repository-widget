@@ -1,12 +1,13 @@
 import { Box, Button, Card } from "@chakra-ui/react";
 import { TFunction } from "i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 type DateButtonsProps = {
   t: TFunction;
   refresh: boolean;
   setRefresh: (refresh: boolean) => void;
   startDate: Date;
+  endDate: Date;
   setStartDate: (date: Date) => void;
 };
 
@@ -15,7 +16,8 @@ export const DateButtons = ({
   setRefresh,
   setStartDate,
   refresh,
-  startDate
+  startDate,
+  endDate
 }: DateButtonsProps) => {
   const [defaultDates, setDefaultDates] = useState<
     Array<{ label: string; callback: Date; key: string }>
@@ -30,40 +32,39 @@ export const DateButtons = ({
   };
 
   // Inicialización de fechas
+  const isInitialMount = useRef(true);
   useEffect(() => {
-    const now = new Date();
+    const anchorDate = endDate;
     const initialDates = [
       {
         label: `6 ${t("months")}`,
-        callback: subtractMonthsDayOne(now, 6),
+        callback: subtractMonthsDayOne(anchorDate, 6),
         key: '6months'
       },
       {
         label: `1 ${t("year")}`,
-        callback: subtractMonthsDayOne(now, 12),
+        callback: subtractMonthsDayOne(anchorDate, 12),
         key: '1year'
       },
       {
         label: `3 ${t("years")}`,
-        callback: subtractMonthsDayOne(now, 36),
+        callback: subtractMonthsDayOne(anchorDate, 36),
         key: '3years'
       },
     ];
 
     setDefaultDates(initialDates);
 
-    if (!startDate) {
+    if (isInitialMount.current && !startDate) {
       setStartDate(initialDates[0].callback);
+      isInitialMount.current = false;
     }
 
-  }, [t]);
+  }, [t, endDate, startDate, setStartDate]);
 
   const handleSetDate = (date: Date) => {
-    // Restar un mes antes de enviar a la API
     const adjustedDate = new Date(date);
-    adjustedDate.setMonth(adjustedDate.getMonth() - 1);
-    adjustedDate.setDate(1); // Siempre día 1
-
+    adjustedDate.setDate(1); // Always day 1
     setStartDate(adjustedDate);
     setRefresh(!refresh);
   };
