@@ -39,6 +39,7 @@ function getRootElement() {
   const shadowDom = div.attachShadow({ mode: "open" });
   // Crear un div en lugar de un body
   const container = document.createElement("div");
+  container.style.fontFamily = "'Poppins', sans-serif";
   shadowDom.appendChild(container);
   const hostStyle = document.createElement("style");
   hostStyle.textContent = `:host { all: initial; display: block; }
