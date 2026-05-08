@@ -40,10 +40,10 @@ function getRootElement() {
   // Crear un div en lugar de un body
   const container = document.createElement("div");
   shadowDom.appendChild(container);
-  const fontStyle = document.createElement("style");
-  fontStyle.textContent =
-    "@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');";
-  shadowDom.prepend(fontStyle);
+  const hostStyle = document.createElement("style");
+  hostStyle.textContent = `:host { all: initial; display: block; }
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');`;
+  shadowDom.prepend(hostStyle);
   return container;
 }
 
