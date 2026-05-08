@@ -170,7 +170,7 @@ import { Footer } from "./components/ui/Footer";
               />
             </Suspense>
           )}
-          <Box px='4'>
+          <Box mt="4">
             <Footer />
           </Box>
         </Box>

@@ -3,8 +3,13 @@ import {
   Card,
   Grid,
   Text,
-  Divider,
   Icon,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Tooltip,
 } from "@chakra-ui/react";
 import { InfoIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { FaRegEye, FaGlobe, FaLanguage } from "react-icons/fa";
@@ -13,44 +18,51 @@ import { GiClick } from "react-icons/gi";
 import { IoFunnel } from "react-icons/io5";
 import { MdNumbers, MdOutlineBarChart } from "react-icons/md";
 import { BsCalendarRange, BsStack } from "react-icons/bs";
+import { useTranslation } from "react-i18next";
 
-const Section = ({
+const StepButton = ({
   number,
   title,
+  subtitle,
   color,
-  children,
 }: {
   number: string;
   title: string;
+  subtitle: string;
   color: string;
-  children: React.ReactNode;
 }) => (
-  <Box>
-    <Box display="flex" alignItems="center" gap="3" mb="3">
+  <AccordionButton _hover={{ bg: "gray.50" }} borderRadius="12" px="4" py="3">
+    <Box display="flex" alignItems="center" gap="4" flex="1" textAlign="left">
       <Box
         bg={color}
         color="white"
         borderRadius="full"
-        w="28px"
-        h="28px"
+        w="36px"
+        h="36px"
         display="flex"
         alignItems="center"
         justifyContent="center"
-        fontWeight="700"
-        fontSize="0.85rem"
+        fontWeight="800"
+        fontSize="1rem"
         flexShrink={0}
+        shadow="sm"
       >
         {number}
       </Box>
-      <Text fontWeight="700" fontSize="0.95rem" color="gray.700">
-        {title}
-      </Text>
+      <Box>
+        <Text fontWeight="700" fontSize="0.9rem" color="gray.800" lineHeight="1.2">
+          {title}
+        </Text>
+        <Text fontSize="0.72rem" color="gray.400" lineHeight="1.3" mt="0.5">
+          {subtitle}
+        </Text>
+      </Box>
     </Box>
-    {children}
-  </Box>
+    <AccordionIcon color="gray.400" />
+  </AccordionButton>
 );
 
-const Chip = ({
+const ControlChip = ({
   icon,
   label,
   sublabel,
@@ -58,28 +70,29 @@ const Chip = ({
 }: {
   icon: React.ReactNode;
   label: string;
-  sublabel?: string;
+  sublabel: string;
   color?: string;
 }) => (
-  <Card
-    p="3"
-    borderRadius="10"
-    shadow="sm"
-    border="1px solid"
-    borderColor="gray.100"
+  <Box
     display="flex"
-    flexDir="row"
     alignItems="center"
     gap="3"
+    bg="white"
+    border="1px solid"
+    borderColor="gray.100"
+    borderRadius="10"
+    p="3"
+    shadow="xs"
   >
     <Box
-      bg={`${color}.50`}
-      color={`${color}.500`}
+      bg={`${color}.100`}
+      color={`${color}.600`}
       borderRadius="8"
       p="2"
-      fontSize="1.1rem"
+      fontSize="1.2rem"
       display="flex"
       alignItems="center"
+      flexShrink={0}
     >
       {icon}
     </Box>
@@ -87,200 +100,144 @@ const Chip = ({
       <Text fontWeight="600" fontSize="0.8rem" color="gray.700" lineHeight="1.2">
         {label}
       </Text>
-      {sublabel && (
-        <Text fontSize="0.7rem" color="gray.400" lineHeight="1.2">
-          {sublabel}
-        </Text>
-      )}
+      <Text fontSize="0.7rem" color="gray.400" lineHeight="1.3" mt="0.5">
+        {sublabel}
+      </Text>
     </Box>
-  </Card>
+  </Box>
 );
 
-const StatCard = ({
+const MetricCard = ({
   icon,
   label,
-  description,
+  tooltip,
   color = "teal",
 }: {
   icon: React.ReactNode;
   label: string;
-  description: string;
+  tooltip: string;
   color?: string;
 }) => (
-  <Card
-    p="3"
-    borderRadius="10"
-    shadow="sm"
-    border="1px solid"
-    borderColor="gray.100"
-  >
-    <Box display="flex" alignItems="center" gap="2" mb="2">
-      <Box
-        bg={`${color}.50`}
-        color={`${color}.500`}
-        borderRadius="6"
-        p="1.5"
-        fontSize="0.9rem"
-        display="flex"
-        alignItems="center"
-      >
-        {icon}
+  <Tooltip label={tooltip} fontSize="xs" placement="top" hasArrow borderRadius="8">
+    <Card
+      p="3"
+      borderRadius="10"
+      shadow="sm"
+      border="1px solid"
+      borderColor="gray.100"
+      cursor="default"
+      _hover={{ borderColor: `${color}.200`, shadow: "md" }}
+      transition="all 0.15s"
+    >
+      <Box display="flex" flexDir="column" alignItems="center" gap="2" textAlign="center">
+        <Box
+          bg={`${color}.50`}
+          color={`${color}.500`}
+          borderRadius="8"
+          p="2.5"
+          fontSize="1.2rem"
+          display="flex"
+          alignItems="center"
+        >
+          {icon}
+        </Box>
+        <Text fontWeight="700" fontSize="0.82rem" color="gray.700">
+          {label}
+        </Text>
+        <Icon as={InfoIcon} color="gray.300" fontSize="0.7rem" />
       </Box>
-      <Text fontWeight="700" fontSize="0.85rem" color="gray.700">
-        {label}
-      </Text>
-    </Box>
-    <Text fontSize="0.72rem" color="gray.500" lineHeight="1.4">
-      {description}
-    </Text>
-  </Card>
+    </Card>
+  </Tooltip>
 );
 
 export const GeneralTabInfogram = () => {
+  const { t } = useTranslation();
+
   return (
-    <Box display="flex" flexDir="column" gap="6">
+    <Accordion allowMultiple defaultIndex={[]}>
 
-      {/* Controls row */}
-      <Section number="1" title="Controles del dashboard" color="teal.400">
-        <Grid
-          templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(4, 1fr)" }}
-          gap="3"
-        >
-          <Chip
-            icon={<FaGlobe />}
-            label="Selector de repositorio"
-            sublabel="Repositorio a analizar"
-            color="teal"
-          />
-          <Chip
-            icon={<BsCalendarRange />}
-            label="Selector de fechas"
-            sublabel="Intervalo de tiempo"
-            color="blue"
-          />
-          <Chip
-            icon={<BsStack />}
-            label="Selector de nivel"
-            sublabel="LA Referencia / Repositorio / Nodo / Total"
-            color="purple"
-          />
-          <Chip
-            icon={<FaLanguage />}
-            label="Selector de idioma"
-            sublabel="Idioma de la interfaz"
-            color="orange"
-          />
-        </Grid>
-      </Section>
+      {/* Step 1 — Controls */}
+      <AccordionItem border="1px solid" borderColor="gray.100" borderRadius="12" mb="3" overflow="hidden">
+        <StepButton
+          number="1"
+          title={t("help-step1-title")}
+          subtitle={t("help-step1-subtitle")}
+          color="teal"
+        />
+        <AccordionPanel pb="4" px="4">
+          <Grid templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)" }} gap="3">
+            <ControlChip icon={<FaGlobe />} label={t("help-step1-repo-label")} sublabel={t("help-step1-repo-sub")} color="teal" />
+            <ControlChip icon={<BsCalendarRange />} label={t("help-step1-dates-label")} sublabel={t("help-step1-dates-sub")} color="blue" />
+            <ControlChip icon={<BsStack />} label={t("help-step1-level-label")} sublabel={t("help-step1-level-sub")} color="purple" />
+            <ControlChip icon={<FaLanguage />} label={t("help-step1-lang-label")} sublabel={t("help-step1-lang-sub")} color="orange" />
+          </Grid>
+        </AccordionPanel>
+      </AccordionItem>
 
-      <Divider />
+      {/* Step 2 — Metrics */}
+      <AccordionItem border="1px solid" borderColor="gray.100" borderRadius="12" mb="3" overflow="hidden">
+        <StepButton
+          number="2"
+          title={t("help-step2-title")}
+          subtitle={t("help-step2-subtitle")}
+          color="blue"
+        />
+        <AccordionPanel pb="4" px="4">
+          <Box bg="blue.50" borderRadius="10" p="3" mb="4" display="flex" alignItems="flex-start" gap="2">
+            <Icon as={InfoIcon} color="blue.400" mt="0.5" flexShrink={0} />
+            <Text fontSize="0.78rem" color="blue.700" lineHeight="1.5">{t("help-step2-info")}</Text>
+          </Box>
+          <Grid
+            templateColumns={{ base: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(5, 1fr)" }}
+            gap="3"
+            mb="4"
+          >
+            <MetricCard icon={<MdNumbers />} label="Total" tooltip={t("help-step2-total-tip")} color="gray" />
+            <MetricCard icon={<FaRegEye />} label={t("views")} tooltip={t("help-step2-views-tip")} color="teal" />
+            <MetricCard icon={<LiaFileDownloadSolid />} label={t("downloads")} tooltip={t("help-step2-downloads-tip")} color="blue" />
+            <MetricCard icon={<GiClick />} label={t("outlinks")} tooltip={t("help-step2-outlinks-tip")} color="purple" />
+            <MetricCard icon={<IoFunnel />} label={t("conversions")} tooltip={t("help-step2-conversions-tip")} color="orange" />
+          </Grid>
+          <Box bg="orange.50" border="1px solid" borderColor="orange.200" borderRadius="10" p="4" display="flex" alignItems="flex-start" gap="3">
+            <Box bg="orange.100" color="orange.500" borderRadius="8" p="2" display="flex" alignItems="center" flexShrink={0}>
+              <Icon as={WarningTwoIcon} fontSize="1rem" />
+            </Box>
+            <Box>
+              <Text fontWeight="700" fontSize="0.82rem" color="orange.800" mb="1">{t("help-conversion-title")}</Text>
+              <Text fontSize="0.75rem" color="orange.700" lineHeight="1.6">{t("help-conversion-text")}</Text>
+            </Box>
+          </Box>
+        </AccordionPanel>
+      </AccordionItem>
 
-      {/* Stats panels */}
-      <Section number="2" title="Paneles de estadísticas" color="blue.400">
-        <Box
-          bg="blue.50"
-          borderRadius="10"
-          p="3"
-          mb="3"
-          display="flex"
-          alignItems="flex-start"
-          gap="2"
-        >
-          <Icon as={InfoIcon} color="blue.400" mt="0.5" flexShrink={0} />
-          <Text fontSize="0.78rem" color="blue.700" lineHeight="1.5">
-            Los valores mostrados corresponden al <strong>nivel seleccionado</strong>. Si el nivel es
-            "Eventos totales", cada métrica suma los 3 niveles (LA Referencia + Repositorio + Nodo Nacional).
-          </Text>
-        </Box>
-        <Grid
-          templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }}
-          gap="3"
-        >
-          <StatCard
-            icon={<MdNumbers />}
-            label="Total"
-            description="Suma de vistas, descargas y enlaces en el nivel seleccionado."
-            color="gray"
-          />
-          <StatCard
-            icon={<FaRegEye />}
-            label="Vistas"
-            description="Cantidad de veces que se vio el ítem."
-            color="teal"
-          />
-          <StatCard
-            icon={<LiaFileDownloadSolid />}
-            label="Descargas"
-            description="Cantidad de veces que se descargó el ítem."
-            color="blue"
-          />
-          <StatCard
-            icon={<GiClick />}
-            label="Enlaces"
-            description="Clics en enlaces que apuntan al ítem."
-            color="purple"
-          />
-          <StatCard
-            icon={<IoFunnel />}
-            label="Conversiones"
-            description="Usuario que vio y luego descargó el ítem en la misma sesión, o hizo clic en el enlace externo."
-            color="orange"
-          />
-        </Grid>
+      {/* Step 3 — Chart */}
+      <AccordionItem border="1px solid" borderColor="gray.100" borderRadius="12" mb="3" overflow="hidden">
+        <StepButton
+          number="3"
+          title={t("help-step3-title")}
+          subtitle={t("help-step3-subtitle")}
+          color="purple"
+        />
+        <AccordionPanel pb="4" px="4">
+          <Box bg="purple.50" borderRadius="10" p="3" mb="4" display="flex" alignItems="flex-start" gap="2">
+            <Icon as={MdOutlineBarChart} color="purple.500" mt="0.5" flexShrink={0} fontSize="1.1rem" />
+            <Text fontSize="0.78rem" color="purple.700" lineHeight="1.5">{t("help-step3-info")}</Text>
+          </Box>
+          <Grid templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)" }} gap="3">
+            <Card p="3" borderRadius="10" shadow="sm" border="1px solid" borderColor="gray.100">
+              <Text fontWeight="600" fontSize="0.78rem" color="gray.500" mb="1">{t("help-step3-x-label")}</Text>
+              <Text fontWeight="700" fontSize="0.85rem" color="gray.700">{t("help-step3-x-value")}</Text>
+              <Text fontSize="0.72rem" color="gray.400" mt="1">{t("help-step3-x-desc")}</Text>
+            </Card>
+            <Card p="3" borderRadius="10" shadow="sm" border="1px solid" borderColor="gray.100">
+              <Text fontWeight="600" fontSize="0.78rem" color="gray.500" mb="1">{t("help-step3-y-label")}</Text>
+              <Text fontWeight="700" fontSize="0.85rem" color="gray.700">{t("help-step3-y-value")}</Text>
+              <Text fontSize="0.72rem" color="gray.400" mt="1">{t("help-step3-y-desc")}</Text>
+            </Card>
+          </Grid>
+        </AccordionPanel>
+      </AccordionItem>
 
-        {/* Conversion callout */}
-        <Box
-          mt="3"
-          bg="orange.50"
-          border="1px solid"
-          borderColor="orange.200"
-          borderRadius="10"
-          p="3"
-          display="flex"
-          alignItems="flex-start"
-          gap="2"
-        >
-          <Icon as={WarningTwoIcon} color="orange.400" mt="0.5" flexShrink={0} />
-          <Text fontSize="0.78rem" color="orange.800" lineHeight="1.5">
-            <strong>Conversión:</strong> ocurre cuando un mismo usuario en una misma sesión descarga un ítem
-            (artículo, tesis, etc.) luego de haberlo visto en el repositorio, o cuando hace clic en el
-            enlace que dirige al ítem fuera del nivel repositorio.
-          </Text>
-        </Box>
-      </Section>
-
-      <Divider />
-
-      {/* Chart */}
-      <Section number="3" title="Gráfico de barras apiladas" color="purple.400">
-        <Box
-          bg="purple.50"
-          borderRadius="10"
-          p="3"
-          mb="3"
-          display="flex"
-          alignItems="flex-start"
-          gap="2"
-        >
-          <Icon as={MdOutlineBarChart} color="purple.400" mt="0.5" flexShrink={0} fontSize="1.1rem" />
-          <Text fontSize="0.78rem" color="purple.700" lineHeight="1.5">
-            Visualiza la evolución mensual de los eventos en el <strong>nivel e intervalo de tiempo seleccionados</strong>.
-            La línea superpuesta representa las <strong>conversiones</strong>.
-            Al pasar el cursor sobre una barra se ven los valores por tipo de evento.
-          </Text>
-        </Box>
-        <Grid templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)" }} gap="3">
-          <Card p="3" borderRadius="10" shadow="sm" border="1px solid" borderColor="gray.100">
-            <Text fontWeight="600" fontSize="0.8rem" color="gray.600" mb="1">Eje X</Text>
-            <Text fontSize="0.75rem" color="gray.500">Meses dentro del intervalo seleccionado</Text>
-          </Card>
-          <Card p="3" borderRadius="10" shadow="sm" border="1px solid" borderColor="gray.100">
-            <Text fontWeight="600" fontSize="0.8rem" color="gray.600" mb="1">Eje Y</Text>
-            <Text fontSize="0.75rem" color="gray.500">Cantidad de eventos acumulados por mes</Text>
-          </Card>
-        </Grid>
-      </Section>
-
-    </Box>
+    </Accordion>
   );
 };
