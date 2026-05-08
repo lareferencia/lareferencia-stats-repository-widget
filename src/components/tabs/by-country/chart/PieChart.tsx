@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
 import { ByCountryStats } from "../../../../interfaces/byCountry.interface";
+import { ProcessedData } from "../../../../interfaces/processed-data.interface";
 
 import { TFunction } from "i18next";
 import { processRawData } from "../../../../utils/process-raw-data";
@@ -10,7 +11,7 @@ import { processRawData } from "../../../../utils/process-raw-data";
 interface PieChartProps {
   data: ByCountryStats;
   tabIndex: number;
-  setCountry: any;
+  setCountry: (country: ProcessedData | undefined) => void;
   t: TFunction;
 }
 
@@ -24,6 +25,7 @@ const PieChart = ({ data, tabIndex, setCountry, t }: PieChartProps) => {
       const pieData = processRawData(data).filter(
         (country) => country.name !== "xx"
       );
+      if (pieData.length === 0) return;
       setCountry(pieData[0]);
 
       const pieDataWithFullNames = pieData.map((country) => {
@@ -78,7 +80,7 @@ const PieChart = ({ data, tabIndex, setCountry, t }: PieChartProps) => {
         myChart.dispose();
       };
     }
-  }, [tabIndex]);
+  }, [tabIndex, data, t, setCountry]);
 
   const setEventHandlers = (myChart: echarts.EChartsType) => {
     myChart.on("mouseover", (event) => {

@@ -24,9 +24,9 @@ type Props = {
 const MapChart = ({ processedData, regionSelected, t }: Props) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
-  const fetchGeoJson = async (regionSelected: string) => {
+  const fetchGeoJson = async (regionSelected: string, signal?: AbortSignal) => {
     try {
-      const response = await fetch(`https://cdn.jsdelivr.net/gh/lareferencia/lrhw@1.0.5/dist/assets/${regionSelected}.json`);
+      const response = await fetch(`https://cdn.jsdelivr.net/gh/lareferencia/lrhw@1.0.5/dist/assets/${regionSelected}.json`, { signal });
 
       const geojson = await response.json();
 
@@ -37,6 +37,7 @@ const MapChart = ({ processedData, regionSelected, t }: Props) => {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
     const myChart = echarts.init(chartRef.current);
 
     if (chartRef.current) {
@@ -55,8 +56,9 @@ const MapChart = ({ processedData, regionSelected, t }: Props) => {
       
           // const geojson = geoJsonMap[regionSelected as keyof typeof geoJsonMap];
           
-          fetchGeoJson(regionSelected)
+          fetchGeoJson(regionSelected, controller.signal)
           .then((geojson) => {
+          if (controller.signal.aborted) return;
           const showCountries = processedData.map((country) => {
             let countryName = country.name
             if (countryName.toLowerCase() === "people's republic of china") {
@@ -156,12 +158,14 @@ const MapChart = ({ processedData, regionSelected, t }: Props) => {
           };
 
           myChart.setOption(option);
-
-          option && myChart.setOption(option);
     }
 );
+    return () => {
+      controller.abort();
+      myChart.dispose();
+    };
   }
-  }, [regionSelected]);
+  }, [regionSelected, processedData, t]);
 
   return (
     <GridItem w="100%" colSpan={4}>

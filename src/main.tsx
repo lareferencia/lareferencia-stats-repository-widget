@@ -28,7 +28,11 @@ const WidgetWrapper = ({ root }: { root: HTMLElement }) => {
 
 function getRootElement() {
   const div = document.getElementById("lrhw-widget");
-  const shadowDom = div!.attachShadow({ mode: "open" });
+  if (!div) {
+    console.error("[lrhw-widget] Container element #lrhw-widget not found. Make sure the element exists before the script loads.");
+    return null;
+  }
+  const shadowDom = div.attachShadow({ mode: "open" });
   // Crear un div en lugar de un body
   const container = document.createElement("div");
   shadowDom.appendChild(container);
@@ -36,11 +40,9 @@ function getRootElement() {
 }
 
 const initSnap = () => {
-  console.log("initSnap");
-
-  let reactRoot: ReactDOM.Root;
   const rootElement = getRootElement();
-  reactRoot = ReactDOM.createRoot(rootElement);
+  if (!rootElement) return () => { /* no-op: widget container not found */ };
+  const reactRoot = ReactDOM.createRoot(rootElement);
   reactRoot.render(<WidgetWrapper root={rootElement} />);
 
   return () => reactRoot?.unmount?.();

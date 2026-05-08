@@ -21,10 +21,10 @@ export interface Country {
 export interface CountryEvent {
     doc_count_error_upper_bound: number;
     sum_other_doc_count:         number;
-    buckets:                     Country[];
+    buckets:                     CountryBucket[];
 }
 
-export interface Country {
+export interface CountryBucket {
     key:       string;
     doc_count: number;
     count:     Count;

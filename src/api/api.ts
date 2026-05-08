@@ -15,19 +15,14 @@ export const fetchData = async (
     time_unit: string
 ) => {
 
-    try {
-        const params = {
-            source_id,
-            start_date,
-            end_date,
-            time_unit,
-            limit: 10
-        }
-
-        const { data } = await axios.get(baseUrl + ws, { params })
-        return data
-
-    } catch (error) {
-        return error
+    const params = {
+        source_id,
+        start_date,
+        end_date,
+        time_unit,
+        limit: 10
     }
+
+    const { data } = await axios.get(baseUrl + ws, { params })
+    return data
 }

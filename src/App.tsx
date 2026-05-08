@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { repositoryWs, fetchData } from "./api/api";
 import {
   DEFAULT_EMBED_FUNCTION_NAME,
-  DEFAULT_END_DATE,
-  DEFAULT_START_DATE,
   DEFAULT_TIME_UNIT,
 } from "./config";
 
@@ -27,7 +25,14 @@ import { Repository } from "./interfaces/repository.interface";
 import { DatesPicker } from "./components/ui/DatesPicker";
 import { Footer } from "./components/ui/Footer";
 
-function App() {
+  type WidgetConfig = {
+    parameters: {
+      repositories_list?: Repository[];
+      default_repository?: Repository;
+    };
+  };
+
+  function App() {
 
   
   // Translation React hook
@@ -42,17 +47,17 @@ function App() {
 
   // LRHW widget parameters
   const embbedFunction = DEFAULT_EMBED_FUNCTION_NAME;
-  const widgetParams = (window as any)[embbedFunction];
+  const widgetParams = (window as unknown as Record<string, WidgetConfig>)[embbedFunction];
 
   // Repositories list and default repository
   const repositoriesList: Repository[] =
     (widgetParams && widgetParams.parameters.repositories_list) || [];
 
-  const defaultRepository: Repository = (widgetParams &&
+  const defaultRepository = useMemo<Repository>(() => (widgetParams &&
     widgetParams.parameters.default_repository) || {
     label: "seleccionar repositorio",
     value: "",
-  };
+  }, []);
 
   const [selectedRepository, setSelectedRepository] =
     useState<Repository>(defaultRepository);
@@ -63,15 +68,13 @@ function App() {
     new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), 1)
   );
   const [endDate, setEndDate] = useState<Date>(currentDate);
-  const start_date = startDate || DEFAULT_START_DATE; //TODO: poner startDate
-  const end_date = endDate || DEFAULT_END_DATE; //TODO: poner endDate
 
   // Fetch data from API
-  const fetchDataAsync = async () => {
+  const fetchDataAsync = useCallback(async () => {
     
     if (selectedRepository.value === "") {
       setSelectedRepository(defaultRepository);
-    } //TODO: ver luego
+    }
 
     setError(false);
     setIsLoading(true);
@@ -87,8 +90,8 @@ function App() {
       const resp: Statistics = await fetchData(
         repositoryWs,
         selectedRepository.value || defaultRepository.value,
-        start_date,
-        end_date,
+        startDate,
+        endDate,
         DEFAULT_TIME_UNIT
       );
       if (resp.level) {
@@ -106,13 +109,13 @@ function App() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }, [selectedRepository, defaultRepository, repositoriesList, startDate, endDate, t]);
 
   // Fetch data on component mount
   useEffect(() => {
     
     fetchDataAsync();
-  }, [ refresh, defaultRepository ]);
+  }, [refresh, selectedRepository, fetchDataAsync]);
 
   return (
     <>

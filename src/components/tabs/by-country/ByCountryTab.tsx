@@ -5,6 +5,7 @@ import { Box, Card } from "@chakra-ui/react";
 import { TFunction } from "i18next";
 import { EventLabels } from "../../../interfaces/stadistics.interface";
 import { ByCountryStats, Repository } from "../../../interfaces";
+import { ProcessedData } from "../../../interfaces/processed-data.interface";
 import { byCountryWs, fetchData } from "../../../api/api";
 import {
   DEFAULT_END_DATE,
@@ -39,10 +40,11 @@ const ByCountryTab = ({
   const [data, setData] = useState<ByCountryStats>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [country, setCountry] = useState();
+  const [country, setCountry] = useState<ProcessedData | undefined>();
 
   const fetchDataAsync = async () => {
     setIsLoading(true);
+    setError(false);
     try {
       const resp: ByCountryStats = await fetchData(
         byCountryWs,
@@ -53,21 +55,22 @@ const ByCountryTab = ({
       );
 
       if (resp.country) {
-        //TODO: arreglar esta condicion
         setData(resp);
       } else {
         setError(true);
       }
-      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Fetch data on component mount
   useEffect(() => {
     fetchDataAsync();
-  }, []);
+  }, [selectedRepository, startDate, endDate]);
 
   return (
     <Box>

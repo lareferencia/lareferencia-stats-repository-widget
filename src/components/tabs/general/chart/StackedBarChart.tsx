@@ -68,9 +68,7 @@ const StackedBarChart = ({
                 ? "line"
                 : "bar"
             }`,
-            yAxisIndex: `${
-              scopeAndEvent.event === DEFAULT_EVENTS_LABELS_KEYS.C ? 1 : 0
-            }`,
+            yAxisIndex: scopeAndEvent.event === DEFAULT_EVENTS_LABELS_KEYS.C ? 1 : 0,
             stack: `${
               scopeAndEvent.event === DEFAULT_EVENTS_LABELS_KEYS.C
                 ? ""
@@ -96,6 +94,7 @@ const StackedBarChart = ({
       return `${month} ${year}`;
     });
 
+      if (!series || series.length < 3) return;
 
       const maxViews = Math.max(...series[0].data);
       const maxDownloads = Math.max(...series[1].data);
@@ -171,7 +170,7 @@ const StackedBarChart = ({
         myChart.dispose();
       };
     }
-  }, [activeScope, tabIndex]);
+  }, [activeScope, tabIndex, data, scopeLabels, eventLabels, t]);
 
   return (
     <Card shadow="sm" borderRadius="12" p="6">
