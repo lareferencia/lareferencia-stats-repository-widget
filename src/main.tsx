@@ -9,20 +9,24 @@ import { theme } from "./theme/theme.ts";
 import { I18nextProvider } from "react-i18next";
 import i18next from "i18next";
 
+export const ShadowRootContext = React.createContext<HTMLElement | null>(null);
+
 const WidgetWrapper = ({ root }: { root: HTMLElement }) => {
   const cache = createCache({ key: "c", container: root });
   const rootRef = React.useRef<HTMLElement>(root);
-  
+
   return (
-    <Portal containerRef={rootRef}>
-      <CacheProvider value={cache}>
-        <I18nextProvider i18n={i18next}>
-          <ChakraProvider theme={theme}>
-            <App />
-          </ChakraProvider>
-        </I18nextProvider>
-      </CacheProvider>
-    </Portal>
+    <ShadowRootContext.Provider value={root}>
+      <Portal containerRef={rootRef}>
+        <CacheProvider value={cache}>
+          <I18nextProvider i18n={i18next}>
+            <ChakraProvider theme={theme}>
+              <App />
+            </ChakraProvider>
+          </I18nextProvider>
+        </CacheProvider>
+      </Portal>
+    </ShadowRootContext.Provider>
   );
 };
 
@@ -36,6 +40,10 @@ function getRootElement() {
   // Crear un div en lugar de un body
   const container = document.createElement("div");
   shadowDom.appendChild(container);
+  const fontStyle = document.createElement("style");
+  fontStyle.textContent =
+    "@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');";
+  shadowDom.prepend(fontStyle);
   return container;
 }
 
