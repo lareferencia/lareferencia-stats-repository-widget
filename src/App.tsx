@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { Suspense, useState, useEffect, useMemo, useCallback } from "react";
 import { repositoryWs, fetchData } from "./api/api";
 import {
   DEFAULT_EMBED_FUNCTION_NAME,
@@ -8,8 +8,8 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { Box } from "@chakra-ui/react";
+import Loading from "./components/ui/Loading";
 
-const Loading = React.lazy(() => import("./components/ui/Loading"));
 const ErrorView = React.lazy(() => import("./components/ui/ErrorView"));
 const TabsContainer = React.lazy(
   () => import("./components/tabs/TabsContainer")
@@ -155,25 +155,29 @@ import { Footer } from "./components/ui/Footer";
           {isLoading || !data ? (
             <Loading />
           ) : (
-            <TabsContainer
-              data={data}
-              t={t}
-              scopeLabels={getScopeLabels(widgetParams, t)}
-              eventLabels={getEventLabels(t)}
-              selectedRepository={selectedRepository}
-              startDate={startDate}
-              endDate={endDate}
-              refresh={refresh}
-              setRefresh={setRefresh}
-              setStartDate={setStartDate}
-            />
+            <Suspense fallback={<Loading />}>
+              <TabsContainer
+                data={data}
+                t={t}
+                scopeLabels={getScopeLabels(widgetParams, t)}
+                eventLabels={getEventLabels(t)}
+                selectedRepository={selectedRepository}
+                startDate={startDate}
+                endDate={endDate}
+                refresh={refresh}
+                setRefresh={setRefresh}
+                setStartDate={setStartDate}
+              />
+            </Suspense>
           )}
           <Box px='4'>
             <Footer />
           </Box>
         </Box>
       ) : (
-        <ErrorView errorMessage={errorMessage} />
+        <Suspense fallback={<Loading />}>
+          <ErrorView errorMessage={errorMessage} />
+        </Suspense>
       )}
     </>
   );
