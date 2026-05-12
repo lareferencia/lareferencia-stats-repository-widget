@@ -4,6 +4,7 @@ import {
   DEFAULT_EMBED_FUNCTION_NAME,
   DEFAULT_TIME_UNIT,
 } from "./config";
+import { subMonths, startOfMonth } from "date-fns";
 
 import { useTranslation } from "react-i18next";
 
@@ -62,16 +63,16 @@ import { Footer } from "./components/ui/Footer";
   const [selectedRepository, setSelectedRepository] =
     useState<Repository>(defaultRepository);
 
-  // stablish in startDate the date of one year ago
-  const currentDate = new Date();
-  const [startDate, setStartDate] = useState<Date>(
-    new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), 1)
-  );
-  const [endDate, setEndDate] = useState<Date>(currentDate);
+  // Establish initial dates (undefined until dataEndDate is discovered)
+  const [dataEndDate, setDataEndDate] = useState<Date | undefined>(undefined);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
-  // Fetch data from API
+  // Fetch data from API (only runs when dates are defined)
   const fetchDataAsync = useCallback(async () => {
-    
+    // Don't fetch until we have proper dates
+    if (!startDate || !endDate) return;
+
     if (selectedRepository.value === "") {
       setSelectedRepository(defaultRepository);
     }
@@ -85,7 +86,7 @@ import { Footer } from "./components/ui/Footer";
       setIsLoading(false);
       return;
     }
-    
+
     try {
       const resp: Statistics = await fetchData(
         repositoryWs,
@@ -100,6 +101,11 @@ import { Footer } from "./components/ui/Footer";
           setError(true);
         } else {
           setData(resp);
+          // Derive dataEndDate from the last time bucket
+          if (resp.time.buckets.length > 0) {
+            const lastBucket = resp.time.buckets[resp.time.buckets.length - 1];
+            setDataEndDate(new Date(lastBucket.key_as_string));
+          }
         }
       } else {
         setErrorMessage(t("no-data"));
@@ -111,9 +117,56 @@ import { Footer } from "./components/ui/Footer";
     }
   }, [selectedRepository, defaultRepository, repositoriesList, startDate, endDate, t]);
 
-  // Fetch data on component mount
+  // Discovery effect: on mount, fetch with very old start date to discover dataEndDate
   useEffect(() => {
-    
+    const discoverDataEndDate = async () => {
+      setIsLoading(true);
+      setError(false);
+
+      if (repositoriesList.length <= 0 && !defaultRepository.value) {
+        setError(true);
+        setErrorMessage("Error en la configuracion del widget");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Use a very old start date to get all historical data
+        const discoveryStartDate = new Date(2000, 0, 1); // Jan 1, 2000
+        const resp: Statistics = await fetchData(
+          repositoryWs,
+          selectedRepository.value || defaultRepository.value,
+          discoveryStartDate,
+          new Date(), // end date = now
+          DEFAULT_TIME_UNIT
+        );
+
+        if (resp.time && resp.time.buckets && resp.time.buckets.length > 0) {
+          const lastBucket = resp.time.buckets[resp.time.buckets.length - 1];
+          const discoveredDataEndDate = new Date(lastBucket.key_as_string);
+          setDataEndDate(discoveredDataEndDate);
+
+          // Set proper date range: 1 year before dataEndDate to dataEndDate
+          const oneYearAgo = startOfMonth(subMonths(discoveredDataEndDate, 12));
+          setStartDate(oneYearAgo);
+          setEndDate(startOfMonth(discoveredDataEndDate));
+        } else {
+          setErrorMessage(t("no-data"));
+          setError(true);
+        }
+      } catch (error) {
+        console.error("Error discovering dataEndDate:", error);
+        setError(true);
+        setErrorMessage(t("no-data"));
+      }
+      setIsLoading(false);
+    };
+
+    discoverDataEndDate();
+  }, [selectedRepository, defaultRepository, repositoriesList, t]);
+
+  // Fetch data when refresh is toggled or repository changes (dates already set by discovery)
+  useEffect(() => {
     fetchDataAsync();
   }, [refresh, selectedRepository, fetchDataAsync]);
 
@@ -146,6 +199,7 @@ import { Footer } from "./components/ui/Footer";
             refresh={refresh}
             setRefresh={setRefresh}
             t={t}
+            maxSelectableDate={dataEndDate}
           />
         </Box>
         <LangSelector i18n={i18n} t={t} />
@@ -167,6 +221,7 @@ import { Footer } from "./components/ui/Footer";
                 refresh={refresh}
                 setRefresh={setRefresh}
                 setStartDate={setStartDate}
+                dataEndDate={dataEndDate}
               />
             </Suspense>
           )}

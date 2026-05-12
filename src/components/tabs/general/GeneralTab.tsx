@@ -17,6 +17,7 @@ interface GeneralTabProps {
   refresh: boolean;
   startDate: Date;
   endDate: Date;
+  dataEndDate?: Date;
 }
 
 const GeneralTab = ({
@@ -31,7 +32,8 @@ const GeneralTab = ({
   setRefresh,
   refresh,
   startDate,
-  endDate
+  endDate,
+  dataEndDate
 }: GeneralTabProps) => {
   return (
     <>
@@ -53,6 +55,7 @@ const GeneralTab = ({
         refresh={refresh}
         startDate={startDate}
         endDate={endDate}
+        dataEndDate={dataEndDate}
       />
 
       {/* Stacked bar chart */}

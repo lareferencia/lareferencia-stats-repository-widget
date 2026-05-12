@@ -1,6 +1,7 @@
 import { Box, Button, Card } from "@chakra-ui/react";
 import { TFunction } from "i18next";
 import { useEffect, useState, useRef } from "react";
+import { subMonths, startOfMonth } from "date-fns";
 
 type DateButtonsProps = {
   t: TFunction;
@@ -9,6 +10,7 @@ type DateButtonsProps = {
   startDate: Date;
   endDate: Date;
   setStartDate: (date: Date) => void;
+  dataEndDate?: Date;
 };
 
 export const DateButtons = ({
@@ -17,24 +19,22 @@ export const DateButtons = ({
   setStartDate,
   refresh,
   startDate,
-  endDate
+  endDate,
+  dataEndDate
 }: DateButtonsProps) => {
   const [defaultDates, setDefaultDates] = useState<
     Array<{ label: string; callback: Date; key: string }>
   >([]);
 
-  // Función para restar meses exactos y forzar día 1
+  // Función para restar meses exactos y forzar día 1 usando date-fns
   const subtractMonthsDayOne = (date: Date, months: number) => {
-    const newDate = new Date(date);
-    newDate.setMonth(newDate.getMonth() - months);
-    newDate.setDate(1);
-    return newDate;
+    return startOfMonth(subMonths(date, months));
   };
 
   // Inicialización de fechas
   const isInitialMount = useRef(true);
   useEffect(() => {
-    const anchorDate = endDate;
+    const anchorDate = dataEndDate ?? endDate;
     const initialDates = [
       {
         label: `6 ${t("months")}`,
@@ -60,7 +60,7 @@ export const DateButtons = ({
       isInitialMount.current = false;
     }
 
-  }, [t, endDate, startDate, setStartDate]);
+  }, [t, dataEndDate, endDate, startDate, setStartDate]);
 
   const handleSetDate = (date: Date) => {
     const adjustedDate = new Date(date);

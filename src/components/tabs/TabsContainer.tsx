@@ -29,6 +29,7 @@ type TabsContainerProps = {
   setRefresh: (refresh: boolean) => void;
   setStartDate: (date: Date) => void;
   refresh: boolean;
+  dataEndDate?: Date;
 };
 
 const TabsContainer = ({
@@ -41,7 +42,8 @@ const TabsContainer = ({
   endDate,
   setRefresh,
   setStartDate,
-  refresh
+  refresh,
+  dataEndDate
 }: TabsContainerProps) => {
   // State to manage the active scope level, Default value is 'ALL'
   const [activeScope, setActiveScope] = useState("ALL");
@@ -98,6 +100,7 @@ const TabsContainer = ({
               refresh={refresh}
               startDate={startDate}
               endDate={endDate}
+              dataEndDate={dataEndDate}
             />
           </TabPanel>
 

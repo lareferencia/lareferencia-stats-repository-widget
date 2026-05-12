@@ -28,6 +28,7 @@ type DatesPickerProps = {
   refresh: boolean;
   setRefresh: (refresh: boolean) => void;
   t: TFunction;
+  maxSelectableDate?: Date;
 };
 
 export const DatesPicker = ({
@@ -38,15 +39,21 @@ export const DatesPicker = ({
   refresh,
   setRefresh,
   t,
+  maxSelectableDate,
 }: DatesPickerProps) => {
   const [isStartDateBoxVisible, setIsStartDateBoxVisible] = useState(false);
   const [isEndDateBoxVisible, setIsEndDateBoxVisible] = useState(false);
   const [endDateError, setEndDateError] = useState<string>("");
 
-   // Obtener la fecha actual
+   // Obtener la fecha máxima seleccionable (dataEndDate si existe, sino hoy)
+  const maxDate = maxSelectableDate ?? new Date();
+  const maxYear = maxDate.getFullYear();
+  const maxMonth = maxDate.getMonth() + 1;
+
+  // Fecha actual para validaciones
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1; // +1 porque los meses van de 0 a 11
+  const currentMonth = currentDate.getMonth() + 1;
 
 
   const [startDateValue, setStartDateValue] = useState({
@@ -180,8 +187,8 @@ export const DatesPicker = ({
   };
 
   const addEndDateYear = () => {
-  // No permitir años mayores al año actual
-  if (endDateValue.year >= currentYear) return;
+  // No permitir años mayores al año máximo con datos
+  if (endDateValue.year >= maxYear) return;
 
   const newEndDateValue = {
     ...endDateValue,
@@ -242,8 +249,8 @@ export const DatesPicker = ({
               {months.map((month) => (
   <Button
     isDisabled={
-      // Deshabilitar si es mayor al mes actual (mismo año)
-      (startDateValue.year === currentYear && month.id > currentMonth) ||
+      // Deshabilitar si es mayor al mes máximo seleccionable (dataEndDate)
+      (startDateValue.year === maxYear && month.id > maxMonth) ||
       // O si es mayor al mes de fin (mismo año)
       (startDateValue.year === endDateValue.year && month.id > endDateValue.month)
     }
@@ -310,8 +317,8 @@ export const DatesPicker = ({
               {months.map((month) => (
   <Button
     isDisabled={
-      // Deshabilitar si es mayor al mes actual (mismo año)
-      (endDateValue.year === currentYear && month.id > currentMonth) ||
+      // Deshabilitar si es mayor al mes máximo seleccionable (dataEndDate)
+      (endDateValue.year === maxYear && month.id > maxMonth) ||
       // O si es menor al mes de inicio (mismo año)
       (endDateValue.year === startDateValue.year && month.id < startDateValue.month)
     }
