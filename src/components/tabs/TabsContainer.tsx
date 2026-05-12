@@ -99,7 +99,6 @@ const TabsContainer = ({
               setRefresh={setRefresh}
               refresh={refresh}
               startDate={startDate}
-              endDate={endDate}
               dataEndDate={dataEndDate}
             />
           </TabPanel>

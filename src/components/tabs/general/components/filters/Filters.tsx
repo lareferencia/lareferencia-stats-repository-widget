@@ -13,7 +13,6 @@ interface FiltersProps {
   setStartDate: (date: Date) => void;
   refresh: boolean;
   startDate: Date;
-  endDate: Date;
   dataEndDate?: Date;
 }
 
@@ -26,7 +25,6 @@ export const Filters = ({
   setRefresh,
   refresh,
   startDate,
-  endDate,
   dataEndDate
 }: FiltersProps) => {
   return (
@@ -38,27 +36,17 @@ export const Filters = ({
             activeScope={activeScope}
             setActiveScope={setActiveScope}
           />
-          {/* <DatesPicker
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            refresh={refresh}
-            setRefresh={setRefresh}
-            t={t}
-          /> */}
         </Box>
-        {/* Buttons 1y, 3y, 5y TODO: Work on this */}
         <DateButtons
           t={t}
           setRefresh={setRefresh}
           setStartDate={setStartDate}
           refresh={refresh}
           startDate={startDate}
-          endDate={endDate}
           dataEndDate={dataEndDate}
         />
       </Box>
     </Box>
   );
 };
+

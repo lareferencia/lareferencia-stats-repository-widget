@@ -1,6 +1,6 @@
 import { Box, Button, Card } from "@chakra-ui/react";
 import { TFunction } from "i18next";
-import { useEffect, useState, useRef } from "react";
+import { useMemo } from "react";
 import { subMonths, startOfMonth } from "date-fns";
 
 type DateButtonsProps = {
@@ -8,7 +8,6 @@ type DateButtonsProps = {
   refresh: boolean;
   setRefresh: (refresh: boolean) => void;
   startDate: Date;
-  endDate: Date;
   setStartDate: (date: Date) => void;
   dataEndDate?: Date;
 };
@@ -19,64 +18,38 @@ export const DateButtons = ({
   setStartDate,
   refresh,
   startDate,
-  endDate,
   dataEndDate
 }: DateButtonsProps) => {
-  const [defaultDates, setDefaultDates] = useState<
-    Array<{ label: string; callback: Date; key: string }>
-  >([]);
 
-  // Función para restar meses exactos y forzar día 1 usando date-fns
   const subtractMonthsDayOne = (date: Date, months: number) => {
     return startOfMonth(subMonths(date, months));
   };
 
-  // Inicialización de fechas
-  const isInitialMount = useRef(true);
-  useEffect(() => {
-    const anchorDate = dataEndDate ?? endDate;
-    const initialDates = [
-      {
-        label: `6 ${t("months")}`,
-        callback: subtractMonthsDayOne(anchorDate, 6),
-        key: '6months'
-      },
-      {
-        label: `1 ${t("year")}`,
-        callback: subtractMonthsDayOne(anchorDate, 12),
-        key: '1year'
-      },
-      {
-        label: `3 ${t("years")}`,
-        callback: subtractMonthsDayOne(anchorDate, 36),
-        key: '3years'
-      },
+  // Los botones siempre anclan al dataEndDate del fetch inicial — nunca cambia
+  const defaultDates = useMemo(() => {
+    if (!dataEndDate) return [];
+    return [
+      { label: `6 ${t("months")}`, callback: subtractMonthsDayOne(dataEndDate, 6), key: '6months' },
+      { label: `1 ${t("year")}`,   callback: subtractMonthsDayOne(dataEndDate, 12), key: '1year' },
+      { label: `3 ${t("years")}`,  callback: subtractMonthsDayOne(dataEndDate, 36), key: '3years' },
     ];
-
-    setDefaultDates(initialDates);
-
-    if (isInitialMount.current && !startDate) {
-      setStartDate(initialDates[0].callback);
-      isInitialMount.current = false;
-    }
-
-  }, [t, dataEndDate, endDate, startDate, setStartDate]);
+  }, [dataEndDate, t]);
 
   const handleSetDate = (date: Date) => {
     const adjustedDate = new Date(date);
-    adjustedDate.setDate(1); // Always day 1
+    adjustedDate.setDate(1);
     setStartDate(adjustedDate);
     setRefresh(!refresh);
   };
 
-  // Comparación exacta de fechas
   const isSameRange = (selectedDate: Date, rangeDate: Date) => {
     if (!selectedDate || !rangeDate) return false;
-
     return selectedDate.getFullYear() === rangeDate.getFullYear() &&
            selectedDate.getMonth() === rangeDate.getMonth() &&
            selectedDate.getDate() === rangeDate.getDate();
   };
+
+  if (defaultDates.length === 0) return null;
 
   return (
     <Box borderRadius="12">
@@ -110,3 +83,4 @@ export const DateButtons = ({
     </Box>
   );
 };
+

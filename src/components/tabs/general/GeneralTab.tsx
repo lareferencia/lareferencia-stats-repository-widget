@@ -16,7 +16,6 @@ interface GeneralTabProps {
   setStartDate: (date: Date) => void;
   refresh: boolean;
   startDate: Date;
-  endDate: Date;
   dataEndDate?: Date;
 }
 
@@ -32,7 +31,6 @@ const GeneralTab = ({
   setRefresh,
   refresh,
   startDate,
-  endDate,
   dataEndDate
 }: GeneralTabProps) => {
   return (
@@ -54,7 +52,6 @@ const GeneralTab = ({
         setRefresh={setRefresh}
         refresh={refresh}
         startDate={startDate}
-        endDate={endDate}
         dataEndDate={dataEndDate}
       />
 
