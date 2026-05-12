@@ -21,68 +21,40 @@ const months = [
 ];
 
 type DatesPickerProps = {
-  startDate: Date;
-  setStartDate: (date: Date) => void;
-  endDate: Date;
-  setEndDate: (date: Date) => void;
-  refresh: boolean;
-  setRefresh: (refresh: boolean) => void;
-  t: TFunction;
   maxSelectableDate?: Date;
+  onDateRangeConfirm: (start: Date, end: Date) => void;
+  refresh: boolean;
+  setRefresh: (r: boolean) => void;
+  t: TFunction;
 };
 
-export const DatesPicker = ({
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
-  refresh,
-  setRefresh,
-  t,
-  maxSelectableDate,
-}: DatesPickerProps) => {
+export const DatesPicker = (props: DatesPickerProps) => {
+  // refresh/setRefresh are received but not used — DatesPicker delegates to onDateRangeConfirm
+  const { refresh: _unused_refresh, setRefresh: _unused_setRefresh, maxSelectableDate, onDateRangeConfirm, t } = props;
+  // Silence unused var warnings — these props are part of the contract but handled externally
+  void _unused_refresh;
+  void _unused_setRefresh;
+
   const [isStartDateBoxVisible, setIsStartDateBoxVisible] = useState(false);
   const [isEndDateBoxVisible, setIsEndDateBoxVisible] = useState(false);
   const [endDateError, setEndDateError] = useState<string>("");
 
-   // Obtener la fecha máxima seleccionable (dataEndDate si existe, sino hoy)
   const maxDate = maxSelectableDate ?? new Date();
   const maxYear = maxDate.getFullYear();
   const maxMonth = maxDate.getMonth() + 1;
 
-  // Fecha actual para validaciones
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
 
+  const [pickerStart, setPickerStart] = useState<{ year: number; month: number } | null>(null);
+  const [pickerEnd, setPickerEnd] = useState<{ year: number; month: number } | null>(null);
 
-  const [startDateValue, setStartDateValue] = useState({
-    year: startDate.getFullYear(),
-    month: startDate.getMonth() + 1,
-  });
-  const [endDateValue, setEndDateValue] = useState({
-    year: endDate.getFullYear(),
-    month: endDate.getMonth() + 1,
-  });
-
-  // Sync local state when props change externally (e.g., from DateButtons)
-  useEffect(() => {
-    setStartDateValue({
-      year: startDate.getFullYear(),
-      month: startDate.getMonth() + 1,
-    });
-  }, [startDate]);
-
-  useEffect(() => {
-    setEndDateValue({
-      year: endDate.getFullYear(),
-      month: endDate.getMonth() + 1,
-    });
-  }, [endDate]);
+  // Calendar navigation year: use maxSelectableDate year when available, otherwise current year
+  const calendarBaseYear = maxSelectableDate ? maxDate.getFullYear() : currentYear;
 
   const startDateRef = useRef<HTMLDivElement | null>(null);
   const endDateRef = useRef<HTMLDivElement | null>(null);
-
   const shadowContainer = useContext(ShadowRootContext);
 
   useEffect(() => {
@@ -97,7 +69,6 @@ export const DatesPicker = ({
   }, []);
 
   const handleClickOutside = (event: MouseEvent) => {
-    // Verificar si el clic fue dentro del contenedor del date picker
     const isStartPickerClick = startDateRef.current?.contains(
       event.target as Node
     );
@@ -119,7 +90,6 @@ export const DatesPicker = ({
       handleSelectEndDate(monthId);
     }
 
-    // Cerrar el selector después de un pequeño retraso
     setTimeout(() => {
       if (type === "start") {
         setIsStartDateBoxVisible(false);
@@ -130,72 +100,71 @@ export const DatesPicker = ({
   };
 
   const handleSelectStartDate = (month: number) => {
-    setStartDateValue(prev => {
-      const newStartDate = new Date(prev.year, month - 1, 1);
-      setStartDate(newStartDate);
-      return { ...prev, month };
-    });
+    if (pickerStart === null) return;
+    setPickerStart({ ...pickerStart, month });
     setIsStartDateBoxVisible(false);
   };
 
   const handleSelectEndDate = (month: number) => {
-    const lastDay = new Date(endDateValue.year, month - 1, 0).getDate();
-    const newEndDate = new Date(endDateValue.year, month - 1, lastDay);
+    if (pickerEnd === null) return;
+    const lastDay = new Date(pickerEnd.year, month - 1, 0).getDate();
+    const newEndDate = new Date(pickerEnd.year, month - 1, lastDay);
 
-    if (newEndDate < startDate) {
+    const startForValidation = pickerStart
+      ? new Date(pickerStart.year, pickerStart.month - 1, 1)
+      : new Date(0);
+
+    if (newEndDate < startForValidation) {
       setEndDateError(t("error_end_before_start") || "End date cannot be before start date");
       return;
     }
 
     setEndDateError("");
-    setEndDateValue(prev => {
-      const newerEndDate = new Date(prev.year, month - 1, lastDay);
-      setEndDate(newerEndDate);
-      return { ...prev, month };
-    });
+    setPickerEnd({ ...pickerEnd, month });
     setIsEndDateBoxVisible(false);
   };
 
   const subtractStartDateYear = () => {
-    const newStartDateValue = {
-      ...startDateValue,
-      year: startDateValue.year - 1,
-    };
-    setStartDateValue(newStartDateValue);
+    if (pickerStart === null) return;
+    setPickerStart({ ...pickerStart, year: pickerStart.year - 1 });
   };
 
   const addStartDateYear = () => {
-  // No permitir años mayores al año actual
-  if (startDateValue.year >= currentYear || startDateValue.year >= endDateValue.year) {
-    return;
-  }
-  const newStartDateValue = {
-    ...startDateValue,
-    year: startDateValue.year + 1,
+    if (pickerStart === null) return;
+    if (pickerStart.year >= currentYear || pickerStart.year >= (pickerEnd?.year ?? pickerStart.year)) return;
+    setPickerStart({ ...pickerStart, year: pickerStart.year + 1 });
   };
-  setStartDateValue(newStartDateValue);
-};
 
   const subtractEndDateYear = () => {
-    if (endDateValue.year <= startDateValue.year) return;
-
-    const newEndDateValue = {
-      ...endDateValue,
-      year: endDateValue.year - 1,
-    };
-    setEndDateValue(newEndDateValue);
+    if (pickerEnd === null) return;
+    if (pickerEnd.year <= (pickerStart?.year ?? calendarBaseYear)) return;
+    setPickerEnd({ ...pickerEnd, year: pickerEnd.year - 1 });
   };
 
   const addEndDateYear = () => {
-  // No permitir años mayores al año máximo con datos
-  if (endDateValue.year >= maxYear) return;
-
-  const newEndDateValue = {
-    ...endDateValue,
-    year: endDateValue.year + 1,
+    if (pickerEnd === null) return;
+    if (pickerEnd.year >= maxYear) return;
+    setPickerEnd({ ...pickerEnd, year: pickerEnd.year + 1 });
   };
-  setEndDateValue(newEndDateValue);
-};
+
+  const canConfirm = pickerStart !== null && pickerEnd !== null;
+
+  const handleRefreshClick = () => {
+    if (pickerStart === null || pickerEnd === null) return;
+    const startDate = new Date(pickerStart.year, pickerStart.month - 1, 1);
+    const lastDay = new Date(pickerEnd.year, pickerEnd.month - 1, 0).getDate();
+    const endDate = new Date(pickerEnd.year, pickerEnd.month - 1, lastDay);
+    onDateRangeConfirm(startDate, endDate);
+  };
+
+  // Derive display state for start and end
+  const startDisplay = pickerStart !== null
+    ? `${t(months[pickerStart.month - 1].name)} - ${pickerStart.year}`
+    : t("select_interval");
+
+  const endDisplay = pickerEnd !== null
+    ? `${t(months[pickerEnd.month - 1].name)} - ${pickerEnd.year}`
+    : t("select_interval");
 
   return (
     <Box display="flex" gap="1.5">
@@ -208,9 +177,14 @@ export const DatesPicker = ({
           w="200px"
           p="2"
           cursor="pointer"
-          onClick={() => setIsStartDateBoxVisible(true)}
+          onClick={() => {
+            if (pickerStart === null) {
+              setPickerStart({ year: calendarBaseYear, month: 1 });
+            }
+            setIsStartDateBoxVisible(true);
+          }}
         >
-          {t(months[startDateValue.month - 1].name)} - {startDateValue.year}
+          {startDisplay}
         </Button>
 
         {isStartDateBoxVisible && (
@@ -236,7 +210,7 @@ export const DatesPicker = ({
                 onClick={() => subtractStartDateYear()}
               ></Button>
               <Text as="span" fontWeight="bold">
-                {startDateValue.year}
+                {pickerStart?.year ?? calendarBaseYear}
               </Text>
               <Button
                 variant="ghost"
@@ -247,22 +221,20 @@ export const DatesPicker = ({
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap="2">
               {months.map((month) => (
-  <Button
-    isDisabled={
-      // Deshabilitar si es mayor al mes máximo seleccionable (dataEndDate)
-      (startDateValue.year === maxYear && month.id > maxMonth) ||
-      // O si es mayor al mes de fin (mismo año)
-      (startDateValue.year === endDateValue.year && month.id > endDateValue.month)
-    }
-    onClick={() => handleMonthClick("start", month.id)}
-    w={"30%"}
-    key={month.id}
-    size="sm"
-    variant="outline"
-  >
-    {t(month.name)}
-  </Button>
-))}
+                <Button
+                  isDisabled={
+                    (pickerStart?.year === maxYear && month.id > maxMonth) ||
+                    (pickerStart?.year === pickerEnd?.year && month.id > (pickerEnd?.month ?? 12))
+                  }
+                  onClick={() => handleMonthClick("start", month.id)}
+                  w={"30%"}
+                  key={month.id}
+                  size="sm"
+                  variant="outline"
+                >
+                  {t(month.name)}
+                </Button>
+              ))}
             </Box>
           </Box>
         )}
@@ -277,9 +249,14 @@ export const DatesPicker = ({
           w="200px"
           p="2"
           cursor="pointer"
-          onClick={() => setIsEndDateBoxVisible(true)}
+          onClick={() => {
+            if (pickerEnd === null) {
+              setPickerEnd({ year: calendarBaseYear, month: currentMonth });
+            }
+            setIsEndDateBoxVisible(true);
+          }}
         >
-          {t(months[endDateValue.month - 1].name)} - {endDateValue.year}
+          {endDisplay}
         </Button>
         {isEndDateBoxVisible && (
           <Box
@@ -304,7 +281,7 @@ export const DatesPicker = ({
                 onClick={() => subtractEndDateYear()}
               ></Button>
               <Text as="span" fontWeight="bold">
-                {endDateValue.year}
+                {pickerEnd?.year ?? calendarBaseYear}
               </Text>
               <Button
                 variant="ghost"
@@ -315,22 +292,20 @@ export const DatesPicker = ({
 
             <Box display="flex" flexWrap="wrap" justifyContent="center" gap="2">
               {months.map((month) => (
-  <Button
-    isDisabled={
-      // Deshabilitar si es mayor al mes máximo seleccionable (dataEndDate)
-      (endDateValue.year === maxYear && month.id > maxMonth) ||
-      // O si es menor al mes de inicio (mismo año)
-      (endDateValue.year === startDateValue.year && month.id < startDateValue.month)
-    }
-    onClick={() => handleMonthClick("end", month.id)}
-    w={"30%"}
-    key={month.id}
-    size="sm"
-    variant="outline"
-  >
-    {t(month.name)}
-  </Button>
-))}
+                <Button
+                  isDisabled={
+                    (pickerEnd?.year === maxYear && month.id > maxMonth) ||
+                    (pickerEnd?.year === pickerStart?.year && month.id < (pickerStart?.month ?? 1))
+                  }
+                  onClick={() => handleMonthClick("end", month.id)}
+                  w={"30%"}
+                  key={month.id}
+                  size="sm"
+                  variant="outline"
+                >
+                  {t(month.name)}
+                </Button>
+              ))}
             </Box>
           </Box>
         )}
@@ -341,8 +316,13 @@ export const DatesPicker = ({
         )}
       </Box>
 
-      <Button variant="ghost" onClick={() => setRefresh(!refresh)}>
-        <FaSyncAlt size="1.1rem" color="teal" />
+      <Button
+        variant="ghost"
+        onClick={handleRefreshClick}
+        aria-label={canConfirm ? t("confirm_date_range") : t("select_interval")}
+        title={canConfirm ? t("confirm_date_range") : t("select_interval")}
+      >
+        <FaSyncAlt size="1.1rem" color={canConfirm ? "teal" : "gray"} />
       </Button>
     </Box>
   );

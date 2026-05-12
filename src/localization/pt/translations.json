@@ -55,6 +55,9 @@
         "november": "Novembro",
         "december": "Dezembro",
 
+        "select_interval": "Selecionar intervalo",
+        "confirm_date_range": "Confirmar intervalo de datas",
+
         "help-general-title": "Como interpretar o painel \"Geral\"",
         "help-country-title": "Como interpretar o painel \"Por País\"",
 

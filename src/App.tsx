@@ -71,6 +71,12 @@ import { Footer } from "./components/ui/Footer";
   const [dataEndDate, setDataEndDate] = useState<Date | undefined>(undefined);
   const isInitialLoad = useRef(true);
 
+  const handleDateRangeConfirm = useCallback((start: Date, end: Date) => {
+    setStartDate(start);
+    setEndDate(end);
+    setRefresh(r => !r);
+  }, []);
+
   // Fetch data from API
   const fetchDataAsync = useCallback(async () => {
     if (selectedRepository.value === "") {
@@ -101,18 +107,14 @@ import { Footer } from "./components/ui/Footer";
           setError(true);
         } else {
           setData(resp);
-          // Derive dataEndDate from the last time bucket
-          if (resp.time.buckets.length > 0) {
+          // Derive dataEndDate from the last time bucket — only on initial load
+          if (resp.time.buckets.length > 0 && isInitialLoad.current) {
             const lastBucket = resp.time.buckets[resp.time.buckets.length - 1];
             const newDataEndDate = new Date(lastBucket.key_as_string);
             setDataEndDate(newDataEndDate);
-
-            // On initial load, adjust startDate and endDate to match actual data range
-            if (isInitialLoad.current) {
-              isInitialLoad.current = false;
-              setEndDate(newDataEndDate);
-              setStartDate(new Date(newDataEndDate.getUTCFullYear() - 1, newDataEndDate.getUTCMonth(), 1));
-            }
+            isInitialLoad.current = false;
+            setEndDate(newDataEndDate);
+            setStartDate(new Date(newDataEndDate.getUTCFullYear() - 1, newDataEndDate.getUTCMonth(), 1));
           }
         }
       } else {
@@ -152,14 +154,11 @@ import { Footer } from "./components/ui/Footer";
             setRefresh={setRefresh}
           />
           <DatesPicker
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
+            maxSelectableDate={dataEndDate}
+            onDateRangeConfirm={handleDateRangeConfirm}
             refresh={refresh}
             setRefresh={setRefresh}
             t={t}
-            maxSelectableDate={dataEndDate}
           />
         </Box>
         <LangSelector i18n={i18n} t={t} />
