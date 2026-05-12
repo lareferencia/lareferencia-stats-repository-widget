@@ -1,10 +1,9 @@
-import React, { Suspense, useState, useEffect, useMemo, useCallback } from "react";
+import React, { Suspense, useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { repositoryWs, fetchData } from "./api/api";
 import {
   DEFAULT_EMBED_FUNCTION_NAME,
   DEFAULT_TIME_UNIT,
 } from "./config";
-import { subMonths, startOfMonth } from "date-fns";
 
 import { useTranslation } from "react-i18next";
 
@@ -63,16 +62,17 @@ import { Footer } from "./components/ui/Footer";
   const [selectedRepository, setSelectedRepository] =
     useState<Repository>(defaultRepository);
 
-  // Establish initial dates (undefined until dataEndDate is discovered)
+  // Initial dates based on current date (will be adjusted after first fetch via dataEndDate)
+  const currentDate = new Date();
+  const [startDate, setStartDate] = useState<Date>(
+    new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), 1)
+  );
+  const [endDate, setEndDate] = useState<Date>(currentDate);
   const [dataEndDate, setDataEndDate] = useState<Date | undefined>(undefined);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const isInitialLoad = useRef(true);
 
-  // Fetch data from API (only runs when dates are defined)
+  // Fetch data from API
   const fetchDataAsync = useCallback(async () => {
-    // Don't fetch until we have proper dates
-    if (!startDate || !endDate) return;
-
     if (selectedRepository.value === "") {
       setSelectedRepository(defaultRepository);
     }
@@ -104,7 +104,17 @@ import { Footer } from "./components/ui/Footer";
           // Derive dataEndDate from the last time bucket
           if (resp.time.buckets.length > 0) {
             const lastBucket = resp.time.buckets[resp.time.buckets.length - 1];
-            setDataEndDate(new Date(lastBucket.key_as_string));
+            const newDataEndDate = new Date(lastBucket.key_as_string);
+            setDataEndDate(newDataEndDate);
+
+            // On initial load, adjust startDate and endDate to match actual data range
+            if (isInitialLoad.current) {
+              isInitialLoad.current = false;
+              const adjustedEnd = new Date(newDataEndDate.getUTCFullYear(), newDataEndDate.getUTCMonth(), 1);
+              const adjustedStart = new Date(adjustedEnd.getFullYear() - 1, adjustedEnd.getMonth(), 1);
+              setStartDate(adjustedStart);
+              setEndDate(adjustedEnd);
+            }
           }
         }
       } else {
@@ -117,55 +127,7 @@ import { Footer } from "./components/ui/Footer";
     }
   }, [selectedRepository, defaultRepository, repositoriesList, startDate, endDate, t]);
 
-  // Discovery effect: on mount, fetch with very old start date to discover dataEndDate
-  useEffect(() => {
-    const discoverDataEndDate = async () => {
-      setIsLoading(true);
-      setError(false);
-
-      if (repositoriesList.length <= 0 && !defaultRepository.value) {
-        setError(true);
-        setErrorMessage("Error en la configuracion del widget");
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        // Use a very old start date to get all historical data
-        const discoveryStartDate = new Date(2000, 0, 1); // Jan 1, 2000
-        const resp: Statistics = await fetchData(
-          repositoryWs,
-          selectedRepository.value || defaultRepository.value,
-          discoveryStartDate,
-          new Date(), // end date = now
-          DEFAULT_TIME_UNIT
-        );
-
-        if (resp.time && resp.time.buckets && resp.time.buckets.length > 0) {
-          const lastBucket = resp.time.buckets[resp.time.buckets.length - 1];
-          const discoveredDataEndDate = new Date(lastBucket.key_as_string);
-          setDataEndDate(discoveredDataEndDate);
-
-          // Set proper date range: 1 year before dataEndDate to dataEndDate
-          const oneYearAgo = startOfMonth(subMonths(discoveredDataEndDate, 12));
-          setStartDate(oneYearAgo);
-          setEndDate(startOfMonth(discoveredDataEndDate));
-        } else {
-          setErrorMessage(t("no-data"));
-          setError(true);
-        }
-      } catch (error) {
-        console.error("Error discovering dataEndDate:", error);
-        setError(true);
-        setErrorMessage(t("no-data"));
-      }
-      setIsLoading(false);
-    };
-
-    discoverDataEndDate();
-  }, [selectedRepository, defaultRepository, repositoriesList, t]);
-
-  // Fetch data when refresh is toggled or repository changes (dates already set by discovery)
+  // Fetch data on component mount and when refresh/repository changes
   useEffect(() => {
     fetchDataAsync();
   }, [refresh, selectedRepository, fetchDataAsync]);
