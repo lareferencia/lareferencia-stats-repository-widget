@@ -110,10 +110,8 @@ import { Footer } from "./components/ui/Footer";
             // On initial load, adjust startDate and endDate to match actual data range
             if (isInitialLoad.current) {
               isInitialLoad.current = false;
-              const adjustedEnd = new Date(newDataEndDate.getUTCFullYear(), newDataEndDate.getUTCMonth(), 1);
-              const adjustedStart = new Date(adjustedEnd.getFullYear() - 1, adjustedEnd.getMonth(), 1);
-              setStartDate(adjustedStart);
-              setEndDate(adjustedEnd);
+              setEndDate(newDataEndDate);
+              setStartDate(new Date(newDataEndDate.getUTCFullYear() - 1, newDataEndDate.getUTCMonth(), 1));
             }
           }
         }
