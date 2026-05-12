@@ -71,7 +71,7 @@ export const DataTable = ({
                   <Td>
                     {new Date(bucket.key_as_string).toLocaleString(
                       `${t("calendar-lang")}`,
-                      { month: "short", year: "numeric" }
+                      { month: "short", year: "numeric", timeZone: "UTC" }
                     )}
                   </Td>
                   {activeScope === "ALL"

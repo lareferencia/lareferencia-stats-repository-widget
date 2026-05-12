@@ -132,7 +132,8 @@ export const DatesPicker = ({
   };
 
   const handleSelectEndDate = (month: number) => {
-    const newEndDate = new Date(endDateValue.year, month - 1, 30);
+    const lastDay = new Date(endDateValue.year, month - 1, 0).getDate();
+    const newEndDate = new Date(endDateValue.year, month - 1, lastDay);
 
     if (newEndDate < startDate) {
       setEndDateError(t("error_end_before_start") || "End date cannot be before start date");
@@ -141,7 +142,7 @@ export const DatesPicker = ({
 
     setEndDateError("");
     setEndDateValue(prev => {
-      const newerEndDate = new Date(prev.year, month - 1, 30);
+      const newerEndDate = new Date(prev.year, month - 1, lastDay);
       setEndDate(newerEndDate);
       return { ...prev, month };
     });

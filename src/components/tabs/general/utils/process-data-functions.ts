@@ -54,7 +54,7 @@ export const getRows = (activeScope: string, data: Statistics, t: TFunction) => 
             return [
                 new Date(bucket.key_as_string).toLocaleString(
                     `${t("calendar-lang")}`,
-                    { month: "short", year: "numeric" }
+                    { month: "short", year: "numeric", timeZone: "UTC" }
                 ),
                 DEFAULT_SCOPES_KEYS.map((scope) => renderValues(bucket, scope)).join(
                     ","
@@ -66,7 +66,7 @@ export const getRows = (activeScope: string, data: Statistics, t: TFunction) => 
             return [
                 new Date(bucket.key_as_string).toLocaleString(
                     `${t("calendar-lang")}`,
-                    { month: "short", year: "numeric" }
+                    { month: "short", year: "numeric", timeZone: "UTC" }
                 ),
                 DEFAULT_EVENTS_LABELS.map(
                     (event) =>
