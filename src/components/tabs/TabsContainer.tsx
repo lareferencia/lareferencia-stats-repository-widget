@@ -25,9 +25,11 @@ type TabsContainerProps = {
   t: TFunction;
   selectedRepository: Repository;
   startDate: Date;
-  endDate: Date ;
+  endDate: Date;
   setRefresh: (refresh: boolean) => void;
   setStartDate: (date: Date) => void;
+  setEndDate: (date: Date) => void;
+  onPresetSelect: () => void;
   refresh: boolean;
   dataEndDate?: Date;
 };
@@ -42,6 +44,8 @@ const TabsContainer = ({
   endDate,
   setRefresh,
   setStartDate,
+  setEndDate,
+  onPresetSelect,
   refresh,
   dataEndDate
 }: TabsContainerProps) => {
@@ -96,6 +100,8 @@ const TabsContainer = ({
               t={t}
               tabIndex={tabIndex}
               setStartDate={setStartDate}
+              setEndDate={setEndDate}
+              onPresetSelect={onPresetSelect}
               setRefresh={setRefresh}
               refresh={refresh}
               startDate={startDate}

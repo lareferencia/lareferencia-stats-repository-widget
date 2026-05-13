@@ -1,4 +1,5 @@
 import { Badge, Box, Divider, Text } from "@chakra-ui/react";
+import { formatNumber } from "../../../../../utils";
 
 import { useEffect, useState } from "react";
 import { getCountriesByRegionSelected } from "./utils/getCountriesByRegionSelected";
@@ -60,7 +61,7 @@ export const CountriesList = ({ regionSelected, processedData, t }: Props) => {
                 >
                   {country.name}
                 </Badge>
-                <span>- {country.value.toLocaleString()}</span>
+                <span>- {formatNumber(country.value)}</span>
               </Box>
             ))}
           </Box>

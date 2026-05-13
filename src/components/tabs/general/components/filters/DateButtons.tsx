@@ -9,6 +9,8 @@ type DateButtonsProps = {
   setRefresh: (refresh: boolean) => void;
   startDate: Date;
   setStartDate: (date: Date) => void;
+  setEndDate: (date: Date) => void;
+  onPresetSelect: () => void;
   dataEndDate?: Date;
 };
 
@@ -16,6 +18,8 @@ export const DateButtons = ({
   t,
   setRefresh,
   setStartDate,
+  setEndDate,
+  onPresetSelect,
   refresh,
   startDate,
   dataEndDate
@@ -35,10 +39,12 @@ export const DateButtons = ({
     ];
   }, [dataEndDate, t]);
 
-  const handleSetDate = (date: Date) => {
-    const adjustedDate = new Date(date);
-    adjustedDate.setDate(1);
-    setStartDate(adjustedDate);
+  const handleSetDate = (start: Date) => {
+    const adjustedStart = new Date(start);
+    adjustedStart.setDate(1);
+    setStartDate(adjustedStart);
+    if (dataEndDate) setEndDate(dataEndDate);
+    onPresetSelect();
     setRefresh(!refresh);
   };
 

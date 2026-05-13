@@ -25,12 +25,13 @@ type DatesPickerProps = {
   onDateRangeConfirm: (start: Date, end: Date) => void;
   refresh: boolean;
   setRefresh: (r: boolean) => void;
+  resetSignal?: number;
   t: TFunction;
 };
 
 export const DatesPicker = (props: DatesPickerProps) => {
   // refresh/setRefresh are received but not used — DatesPicker delegates to onDateRangeConfirm
-  const { refresh: _unused_refresh, setRefresh: _unused_setRefresh, maxSelectableDate, onDateRangeConfirm, t } = props;
+  const { refresh: _unused_refresh, setRefresh: _unused_setRefresh, maxSelectableDate, onDateRangeConfirm, resetSignal, t } = props;
   // Silence unused var warnings — these props are part of the contract but handled externally
   void _unused_refresh;
   void _unused_setRefresh;
@@ -49,6 +50,13 @@ export const DatesPicker = (props: DatesPickerProps) => {
 
   const [pickerStart, setPickerStart] = useState<{ year: number; month: number } | null>(null);
   const [pickerEnd, setPickerEnd] = useState<{ year: number; month: number } | null>(null);
+
+  // Reset picker to placeholder when DateButtons are used
+  useEffect(() => {
+    if (resetSignal === undefined) return;
+    setPickerStart(null);
+    setPickerEnd(null);
+  }, [resetSignal]);
 
   // Calendar navigation year: use maxSelectableDate year when available, otherwise current year
   const calendarBaseYear = maxSelectableDate ? maxDate.getFullYear() : currentYear;

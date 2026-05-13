@@ -14,6 +14,8 @@ interface GeneralTabProps {
   tabIndex: number;
   setRefresh: (refresh: boolean) => void;
   setStartDate: (date: Date) => void;
+  setEndDate: (date: Date) => void;
+  onPresetSelect: () => void;
   refresh: boolean;
   startDate: Date;
   dataEndDate?: Date;
@@ -28,6 +30,8 @@ const GeneralTab = ({
   t,
   tabIndex,
   setStartDate,
+  setEndDate,
+  onPresetSelect,
   setRefresh,
   refresh,
   startDate,
@@ -49,6 +53,8 @@ const GeneralTab = ({
         activeScope={activeScope}
         setActiveScope={setActiveScope}
         setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        onPresetSelect={onPresetSelect}
         setRefresh={setRefresh}
         refresh={refresh}
         startDate={startDate}

@@ -69,7 +69,14 @@ import { Footer } from "./components/ui/Footer";
   );
   const [endDate, setEndDate] = useState<Date>(currentDate);
   const [dataEndDate, setDataEndDate] = useState<Date | undefined>(undefined);
-  const isInitialLoad = useRef(true);
+  // Tracks which repo has its dataEndDate already set — resets on repo change
+  const dataEndDateRepo = useRef<string | null>(null);
+  // Signal to reset DatesPicker to placeholder when a preset button is used
+  const [pickerResetSignal, setPickerResetSignal] = useState(0);
+
+  const handlePresetSelect = useCallback(() => {
+    setPickerResetSignal(s => s + 1);
+  }, []);
 
   const handleDateRangeConfirm = useCallback((start: Date, end: Date) => {
     setStartDate(start);
@@ -107,12 +114,13 @@ import { Footer } from "./components/ui/Footer";
           setError(true);
         } else {
           setData(resp);
-          // Derive dataEndDate from the last time bucket — only on initial load
-          if (resp.time.buckets.length > 0 && isInitialLoad.current) {
+          // Update dataEndDate only on the first fetch for the current repo
+          const currentRepo = selectedRepository.value || defaultRepository.value;
+          if (resp.time.buckets.length > 0 && dataEndDateRepo.current !== currentRepo) {
             const lastBucket = resp.time.buckets[resp.time.buckets.length - 1];
             const newDataEndDate = new Date(lastBucket.key_as_string);
+            dataEndDateRepo.current = currentRepo;
             setDataEndDate(newDataEndDate);
-            isInitialLoad.current = false;
             setEndDate(newDataEndDate);
             setStartDate(new Date(newDataEndDate.getUTCFullYear() - 1, newDataEndDate.getUTCMonth(), 1));
           }
@@ -153,11 +161,12 @@ import { Footer } from "./components/ui/Footer";
             refresh={refresh}
             setRefresh={setRefresh}
           />
-          <DatesPicker
+           <DatesPicker
             maxSelectableDate={dataEndDate}
             onDateRangeConfirm={handleDateRangeConfirm}
             refresh={refresh}
             setRefresh={setRefresh}
+            resetSignal={pickerResetSignal}
             t={t}
           />
         </Box>
@@ -180,6 +189,8 @@ import { Footer } from "./components/ui/Footer";
                 refresh={refresh}
                 setRefresh={setRefresh}
                 setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                onPresetSelect={handlePresetSelect}
                 dataEndDate={dataEndDate}
               />
             </Suspense>

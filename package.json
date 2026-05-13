@@ -1,7 +1,7 @@
 {
   "name": "repository-widget",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "main.tsx",
   "scripts": {
     "dev": "vite",

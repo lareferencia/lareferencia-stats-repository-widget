@@ -11,6 +11,8 @@ interface FiltersProps {
   t: TFunction;
   setRefresh: (refresh: boolean) => void;
   setStartDate: (date: Date) => void;
+  setEndDate: (date: Date) => void;
+  onPresetSelect: () => void;
   refresh: boolean;
   startDate: Date;
   dataEndDate?: Date;
@@ -22,6 +24,8 @@ export const Filters = ({
   activeScope,
   setActiveScope,
   setStartDate,
+  setEndDate,
+  onPresetSelect,
   setRefresh,
   refresh,
   startDate,
@@ -41,6 +45,8 @@ export const Filters = ({
           t={t}
           setRefresh={setRefresh}
           setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          onPresetSelect={onPresetSelect}
           refresh={refresh}
           startDate={startDate}
           dataEndDate={dataEndDate}

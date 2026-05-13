@@ -24,6 +24,7 @@ import {
   handleDownloadCsv,
   renderValues,
 } from "../utils/process-data-functions";
+import { formatNumber } from "../../../../utils";
 
 type DataTableProps = {
   data: Statistics;
@@ -80,11 +81,11 @@ export const DataTable = ({
                       ))
                     : DEFAULT_EVENTS_LABELS.map((event, index) => (
                         <Td key={index}>
-                          {bucket.level.buckets
-                            .find((b) => b.key === activeScope)
-                            ?.[
-                              event as keyof EventLabels
-                            ]?.value.toLocaleString() || 0}
+                          {formatNumber(
+                            bucket.level.buckets
+                              .find((b) => b.key === activeScope)
+                              ?.[event as keyof EventLabels]?.value ?? 0
+                          )}
                         </Td>
                       ))}
                 </Tr>

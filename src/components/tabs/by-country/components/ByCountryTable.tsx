@@ -13,6 +13,7 @@ import { ByCountryStats } from "../../../../interfaces/byCountry.interface";
 import { EventLabels } from "../../../../interfaces/stadistics.interface";
 
 import { TFunction } from "i18next";
+import { formatNumber } from "../../../../utils";
 import { processRawData } from "../../../../utils/process-raw-data";
 import { DEFAULT_EVENTS_LABELS } from "../../../../config";
 import { CsvButton } from "./CsvButton";
@@ -45,7 +46,7 @@ export const ByCountryTable = ({
                 <Td>{country.name}</Td>
                 {DEFAULT_EVENTS_LABELS.map((label, index) => (
                   <Td key={index}>
-                    {country[label as keyof EventLabels]?.toLocaleString() || 0}
+                    {formatNumber(country[label as keyof EventLabels] ?? 0)}
                   </Td>
                 ))}
               </Tr>

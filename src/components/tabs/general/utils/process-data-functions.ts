@@ -1,18 +1,19 @@
 import { TFunction } from "i18next";
 import { DEFAULT_EVENTS_LABELS, DEFAULT_SCOPES_KEYS } from "../../../../config";
 import { EventLabels, ScopeLabels, Statistics, TimeBucket } from "../../../../interfaces/stadistics.interface";
+import { formatNumber } from "../../../../utils";
 
 
 export const renderValues = (bucket: TimeBucket, scope: string) => {
     if (scope === "ALL")
-        return bucket.level.buckets.reduce(
+        return formatNumber(bucket.level.buckets.reduce(
             (acc, b) =>
                 acc +
                 (b.views?.value || 0) +
                 (b.downloads?.value || 0) +
                 (b.outlinks?.value || 0),
             0
-        );
+        ));
 
     const levelBucket = bucket.level.buckets.find(
         (b) => b.key === scope
@@ -22,7 +23,7 @@ export const renderValues = (bucket: TimeBucket, scope: string) => {
         (levelBucket?.downloads?.value || 0) +
         (levelBucket?.outlinks?.value || 0);
 
-    return total.toLocaleString();
+    return formatNumber(total);
 };
 
 export const getHeaders = (activeScope: string, scopeLabels: ScopeLabels, eventLabels: EventLabels, t: TFunction) => {

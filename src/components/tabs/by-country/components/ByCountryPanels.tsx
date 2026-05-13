@@ -1,6 +1,7 @@
 import { Box, Card, Grid, Text } from "@chakra-ui/react";
 import { Tooltip } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
+import { formatNumber } from "../../../../utils";
 
 import { FaRegEye } from "react-icons/fa";
 import { LiaFileDownloadSolid } from "react-icons/lia";
@@ -94,7 +95,7 @@ export const ByCountryPanels = ({ country, eventLabels, t }: Props) => {
                   fontWeight='bold'
                   fontSize='1.3rem'
                 >
-                  {country[label as keyof EventLabels]?.toLocaleString() || 0}
+                  {formatNumber(country[label as keyof EventLabels] ?? 0)}
                 </Text>
               </Grid>
               <Card

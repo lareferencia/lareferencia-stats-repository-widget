@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { formatNumber } from "../../../../utils";
 
 import { Box, Card, Grid, Text } from "@chakra-ui/react";
 import { Tooltip } from "@chakra-ui/react";
@@ -117,11 +118,11 @@ export const GeneralPanels = ({
                   </Tooltip>
                 </Box>
                 <Text as="span" fontWeight="700" fontSize="1.3rem">
-                  {(
+                  {formatNumber(
                     bucket.downloads.value +
                     bucket.views.value +
                     bucket.outlinks.value
-                  ).toLocaleString()}
+                  )}
                 </Text>
               </Grid>
               <Card
@@ -154,7 +155,7 @@ export const GeneralPanels = ({
                     {panel.label}
                   </Text>
                   <Text as="span" fontWeight="700" fontSize="1.3rem">
-                    {bucket[panel.title as PanelTitle].value.toLocaleString()}
+                    {formatNumber(bucket[panel.title as PanelTitle].value)}
                   </Text>
                 </Grid>
                 <Card
