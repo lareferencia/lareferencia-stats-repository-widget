@@ -50,8 +50,11 @@ import { Footer } from "./components/ui/Footer";
   const widgetParams = (window as unknown as Record<string, WidgetConfig>)[embbedFunction];
 
   // Repositories list and default repository
-  const repositoriesList: Repository[] =
-    (widgetParams && widgetParams.parameters.repositories_list) || [];
+  const repositoriesList: Repository[] = useMemo<Repository[]>(
+    () => (widgetParams && widgetParams.parameters.repositories_list) || [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const defaultRepository = useMemo<Repository>(() => (widgetParams &&
     widgetParams.parameters.default_repository) || {
