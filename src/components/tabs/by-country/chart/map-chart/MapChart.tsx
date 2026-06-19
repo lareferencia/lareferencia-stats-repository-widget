@@ -147,6 +147,7 @@ const MapChart = ({ processedData, regionSelected, t }: Props) => {
                 type: "map",
                 roam: false,
                 map: regionSelected,
+                aspectScale: 1,
                 emphasis: {
                   label: {
                     show: true,
@@ -168,8 +169,8 @@ const MapChart = ({ processedData, regionSelected, t }: Props) => {
   }, [regionSelected, processedData, t]);
 
   return (
-    <GridItem w="100%" colSpan={4}>
-      <Box id="map-chart" ref={chartRef} height="450px"></Box>
+    <GridItem w="100%" colSpan={{ base: 7, md: 4 }}>
+      <Box id="map-chart" ref={chartRef} width="100%" sx={{ aspectRatio: '16/9' }}></Box>
     </GridItem>
   );
 };

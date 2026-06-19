@@ -26,8 +26,8 @@ const MapSectionContainer = ({ data, t }: Props) => {
 
 
   return (
-    <Grid templateColumns="repeat(7, 1fr)">
-      <GridItem w="100%" colSpan={3} p="4">
+    <Grid templateColumns={{ base: "1fr", md: "repeat(7, 1fr)" }}>
+      <GridItem w="100%" colSpan={{ base: 7, md: 3 }} p="4">
         <RegionsSelector
           t={t}
           regions={regions}
