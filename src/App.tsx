@@ -68,9 +68,11 @@ import { Footer } from "./components/ui/Footer";
   // Initial dates based on current date (will be adjusted after first fetch via dataEndDate)
   const currentDate = new Date();
   const [startDate, setStartDate] = useState<Date>(
-    new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), 1)
+    new Date(Date.UTC(currentDate.getFullYear() - 1, currentDate.getMonth(), 1))
   );
-  const [endDate, setEndDate] = useState<Date>(currentDate);
+  const [endDate, setEndDate] = useState<Date>(
+    new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()))
+  );
   const [dataEndDate, setDataEndDate] = useState<Date | undefined>(undefined);
   // Tracks which repo has its dataEndDate already set — resets on repo change
   const dataEndDateRepo = useRef<string | null>(null);
@@ -125,7 +127,7 @@ import { Footer } from "./components/ui/Footer";
             dataEndDateRepo.current = currentRepo;
             setDataEndDate(newDataEndDate);
             setEndDate(newDataEndDate);
-            setStartDate(new Date(newDataEndDate.getUTCFullYear() - 1, newDataEndDate.getUTCMonth(), 1));
+            setStartDate(new Date(Date.UTC(newDataEndDate.getUTCFullYear(), newDataEndDate.getUTCMonth() - 11, 1)));
           }
         }
       } else {

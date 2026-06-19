@@ -115,11 +115,12 @@ export const DatesPicker = (props: DatesPickerProps) => {
 
   const handleSelectEndDate = (month: number) => {
     if (pickerEnd === null) return;
-    const lastDay = new Date(pickerEnd.year, month - 1, 0).getDate();
-    const newEndDate = new Date(pickerEnd.year, month - 1, lastDay);
+    // Usar Date.UTC para consistencia de zona horaria
+    const lastDay = new Date(Date.UTC(pickerEnd.year, month, 0)).getUTCDate();
+    const newEndDate = new Date(Date.UTC(pickerEnd.year, month - 1, lastDay));
 
     const startForValidation = pickerStart
-      ? new Date(pickerStart.year, pickerStart.month - 1, 1)
+      ? new Date(Date.UTC(pickerStart.year, pickerStart.month - 1, 1))
       : new Date(0);
 
     if (newEndDate < startForValidation) {
@@ -159,9 +160,10 @@ export const DatesPicker = (props: DatesPickerProps) => {
 
   const handleRefreshClick = () => {
     if (pickerStart === null || pickerEnd === null) return;
-    const startDate = new Date(pickerStart.year, pickerStart.month - 1, 1);
-    const lastDay = new Date(pickerEnd.year, pickerEnd.month - 1, 0).getDate();
-    const endDate = new Date(pickerEnd.year, pickerEnd.month - 1, lastDay);
+    // Usar Date.UTC para evitar problemas de zona horaria
+    const startDate = new Date(Date.UTC(pickerStart.year, pickerStart.month - 1, 1));
+    const lastDay = new Date(Date.UTC(pickerEnd.year, pickerEnd.month, 0)).getUTCDate();
+    const endDate = new Date(Date.UTC(pickerEnd.year, pickerEnd.month - 1, lastDay));
     onDateRangeConfirm(startDate, endDate);
   };
 

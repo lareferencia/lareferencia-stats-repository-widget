@@ -66,7 +66,7 @@ export const DataTable = ({
             </Tr>
           </Thead>
           <Tbody>
-            {data.time.buckets
+            {[...data.time.buckets].reverse()
               .map((bucket, index) => (
                 <Tr key={index}>
                   <Td>
